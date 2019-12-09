@@ -12,9 +12,6 @@
 #include "marlin/book/Hist.h"
 #include "marlin/book/Entry.h"
 
-// -- histogram conversion include 
-#include "marlin/book/RootHistV7ToV6Conversion.h"
-
 // -- ROOT includes
 #include "TDirectory.h"
 #include "TFile.h"
@@ -29,15 +26,15 @@ public:
 using DirectoryMap = std::unordered_map<std::filesystem::path, TDirectory*, PathHash>;
 
 template<typename T>  
-void writeObject( TDirectory* file, const std::string& name, const T& obj) {
+void writeObject( TDirectory* file, const std::string_view& name, const T& obj) {
 
-  auto root6Obj = into_root6_hist(
+  auto root6Obj = marlin::book::types::toRoot6(
         obj,
-        name.c_str()) ;
+        name) ;
 
   file->WriteTObject(
       &root6Obj,
-      name.c_str()
+      std::string(name).c_str()
   ) ;
 }
 
@@ -66,24 +63,24 @@ namespace marlin {
         if(file == nullptr) {
           throw std::string("failed create: ") + path + '\n';
         }
-        if (type == std::type_index(typeid(types::RH1F))) {
-          writeObject<types::RH1F>(file, key.path.filename().string(), h.handle<types::RH1F>().merged());
-        } else if (type == std::type_index(typeid(types::RH1D))){ 
-          writeObject<types::RH1D>(file, key.path.filename().string(), h.handle<types::RH1D>().merged());
-        } else if (type == std::type_index(typeid(types::RH1I))){
-          writeObject<types::RH1I>(file, key.path.filename().string(), h.handle<types::RH1I>().merged());
-        } else if (type == std::type_index(typeid(types::RH2F))){ 
-          writeObject<types::RH2F>(file, key.path.filename().string(), h.handle<types::RH2F>().merged());
-        } else if (type == std::type_index(typeid(types::RH2D))){
-          writeObject<types::RH2D>(file, key.path.filename().string(), h.handle<types::RH2D>().merged());
-        } else if (type == std::type_index(typeid(types::RH2I))){ 
-          writeObject<types::RH2I>(file, key.path.filename().string(), h.handle<types::RH2I>().merged());
-        } else if (type == std::type_index(typeid(types::RH3F))){
-          writeObject<types::RH3F>(file, key.path.filename().string(), h.handle<types::RH3F>().merged());
-        } else if (type == std::type_index(typeid(types::RH3D))){ 
-          writeObject<types::RH3D>(file, key.path.filename().string(), h.handle<types::RH3D>().merged());
-        } else if (type == std::type_index(typeid(types::RH3I))){
-          writeObject<types::RH3I>(file, key.path.filename().string(), h.handle<types::RH3I>().merged());
+        if (type == std::type_index(typeid(types::H1F))) {
+          writeObject<types::H1F>(file, key.path.filename().string(), h.handle<types::H1F>().merged());
+        } else if (type == std::type_index(typeid(types::H1D))){ 
+          writeObject<types::H1D>(file, key.path.filename().string(), h.handle<types::H1D>().merged());
+        } else if (type == std::type_index(typeid(types::H1I))){
+          writeObject<types::H1I>(file, key.path.filename().string(), h.handle<types::H1I>().merged());
+        } else if (type == std::type_index(typeid(types::H2F))){ 
+          writeObject<types::H2F>(file, key.path.filename().string(), h.handle<types::H2F>().merged());
+        } else if (type == std::type_index(typeid(types::H2D))){
+          writeObject<types::H2D>(file, key.path.filename().string(), h.handle<types::H2D>().merged());
+        } else if (type == std::type_index(typeid(types::H2I))){ 
+          writeObject<types::H2I>(file, key.path.filename().string(), h.handle<types::H2I>().merged());
+        } else if (type == std::type_index(typeid(types::H3F))){
+          writeObject<types::H3F>(file, key.path.filename().string(), h.handle<types::H3F>().merged());
+        } else if (type == std::type_index(typeid(types::H3D))){ 
+          writeObject<types::H3D>(file, key.path.filename().string(), h.handle<types::H3D>().merged());
+        } else if (type == std::type_index(typeid(types::H3I))){
+          writeObject<types::H3I>(file, key.path.filename().string(), h.handle<types::H3I>().merged());
         } else {
           MARLIN_THROW_T( BookStoreException, "can't store object, no known operation");
         }

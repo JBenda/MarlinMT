@@ -21,7 +21,7 @@ namespace marlin {
      *  @brief minimal entry for Object.
      *  @note not for multithreading.
      */
-    template < typename T , types::Categories C = types::category_of<T>>
+    template < typename T >
     class EntrySingle : public EntryBase {
       friend BookStore ;
 
@@ -48,7 +48,7 @@ namespace marlin {
      *  contains multiple instances to avoid synchronisation.
      *  @note keep the memory consumption in mind.
      */
-    template < typename T , types::Categories C = types::category_of<T>>
+    template < typename T >
     class EntryMultiCopy : public EntryBase {
       friend BookStore ;
 
@@ -79,7 +79,7 @@ namespace marlin {
      *  contain only one Instance and a thread save way to write.
      *  @note keep synchronisation points in mind.
      */
-    template < typename T , types::Categories C = types::category_of<T>>
+    template < typename T >
     class EntryMultiShared : public EntryBase {
       friend BookStore ;
 

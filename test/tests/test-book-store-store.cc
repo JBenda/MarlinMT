@@ -19,62 +19,53 @@ using namespace marlin::book::types ;
 
 std::string expected = "expected: " ;
 
-struct AxisConfig {
-  AxisConfig( const char *_name, int _bins, double _min, double _max )
-    : name{_name}, bins{_bins}, min{_min}, max{_max} {}
-              operator RAxisConfig() const { return RAxisConfig( name, bins, min, max ); }
-  const char *name ;
-  int         bins ;
-  double      min ;
-  double      max ;
-} ;
 
 
 template < typename T >
 struct HDetails {} ;
 
 template <>
-struct HDetails< RH1F > {
+struct HDetails< H1F > {
   using RootT                  = TH1F ;
   static constexpr char Name[] = "H1F" ;
 } ;
 template <>
-struct HDetails< RH1D > {
+struct HDetails< H1D > {
   using RootT                  = TH1D ;
   static constexpr char Name[] = "H1D" ;
 } ;
 template <>
-struct HDetails< RH1I > {
+struct HDetails< H1I > {
   using RootT                  = TH1I ;
   static constexpr char Name[] = "H1I" ;
 } ;
 template <>
-struct HDetails< RH2F > {
+struct HDetails< H2F > {
   using RootT                  = TH2F ;
   static constexpr char Name[] = "H2F" ;
 } ;
 template <>
-struct HDetails< RH2D > {
+struct HDetails< H2D > {
   using RootT                  = TH2D ;
   static constexpr char Name[] = "H2D" ;
 } ;
 template <>
-struct HDetails< RH2I > {
+struct HDetails< H2I > {
   using RootT                  = TH2I ;
   static constexpr char Name[] = "H2I" ;
 } ;
 template <>
-struct HDetails< RH3F > {
+struct HDetails< H3F > {
   using RootT                  = TH3F ;
   static constexpr char Name[] = "H3F" ;
 } ;
 template <>
-struct HDetails< RH3D > {
+struct HDetails< H3D > {
   using RootT                  = TH3D ;
   static constexpr char Name[] = "H3D" ;
 } ;
 template <>
-struct HDetails< RH3I > {
+struct HDetails< H3I > {
   using RootT                  = TH3I ;
   static constexpr char Name[] = "H3I" ;
 } ;
@@ -87,21 +78,21 @@ struct Bin {
 
 template <int N, typename T >
 class HistTest {
-  using Type                        = marlin::book::types::HistType_t< N, T > ;
+  using Type                        = marlin::book::types::HistT<HistConfig<double, T, N>>;
   using RootT                       = typename HDetails< Type >::RootT ;
   static constexpr const char *Name = HDetails< Type >::Name ;
 
-  void CheckAxis( TAxis *axis, const AxisConfig &config ) const {
-    if ( strcmp( config.name, axis->GetTitle() ) != 0 ) {
+  void CheckAxis( TAxis *axis, const AxisConfig<double> &config ) const {
+    if ( std::string(config.title()) !=  axis->GetTitle() ) {
       throw expected + _path.string() + " to have axis with title: '"
-        + config.name + "' but found: '" + axis->GetTitle() + "'" ;
+        + config.title() + "' but found: '" + axis->GetTitle() + "'" ;
     }
   }
 
 public:
   HistTest( const std::string_view            name,
             const std::string_view            title,
-            const std::array< AxisConfig, N > config )
+            const std::array< AxisConfig<double>, N > config )
     : _name{std::move( name )}, _title{std::move( title )}, _config{std::move(
                                                               config )} {}
   const std::string_view &name() const { return _name; }
@@ -150,7 +141,7 @@ private:
   std::filesystem::path       _path{"-"} ;
   std::string_view            _name{"-"} ;
   std::string_view            _title{"-"} ;
-  std::array< AxisConfig, N > _config ;
+  std::array< AxisConfig<double>, N > _config ;
 } ;
 
 template < class TEST, class... Rest >
@@ -242,7 +233,7 @@ private:
 int main( int /*argc*/, char * /*argv*/[] ) {
   marlin::test::UnitTest test( " BookStore: write to file " ) ;
 
-  AxisConfig            axis = {"x", 2, -2.f, 5.f} ;
+  AxisConfig<double> axis = {"x", 2, -2.f, 5.f} ;
 
   RootTest bluePrint(
       TestDirectory("path",

@@ -13,203 +13,206 @@ namespace marlin {
 
     //--------------------------------------------------------------------------
     
-    template < typename T>
-    EntryDataBase< T, types::Categories::Hist >::EntryDataBase(
+    template < typename Config >
+    EntryDataBase< types::HistT<Config> >::EntryDataBase(
       const std::string_view &title )
       : _title{title} {}
 
     //--------------------------------------------------------------------------
 
-    template < typename T>
-    EntryData< T, types::Categories::Hist, Flags::value(Flags::Book::Single) >
-    EntryDataBase< T, types::Categories::Hist >::single() const {
-      return EntryData< T,
-                        types::Categories::Hist,
+    template < typename Config >
+    EntryData< types::HistT<Config>, Flags::value(Flags::Book::Single) >
+    EntryDataBase< types::HistT<Config> >::single() const {
+      return EntryData< types::HistT<Config>,
                         Flags::value(Flags::Book::Single) >( *this ) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template < typename T>
-    EntryData< T, types::Categories::Hist, Flags::value(Flags::Book::MultiCopy) >
-    EntryDataBase< T, types::Categories::Hist >::multiCopy( std::size_t n ) const {
-      return EntryData< T,
-                        types::Categories::Hist,
+    template < typename Config >
+    EntryData< types::HistT<Config>, Flags::value(Flags::Book::MultiCopy) >
+    EntryDataBase< types::HistT<Config> >::multiCopy( std::size_t n ) const {
+      return EntryData< types::HistT<Config>,
                         Flags::value(Flags::Book::MultiCopy) >( *this, n ) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template < typename T>
-    EntryData< T, types::Categories::Hist, Flags::value(Flags::Book::MultiShared) >
-    EntryDataBase< T, types::Categories::Hist >::multiShared() const {
-      return EntryData< T,
-                        types::Categories::Hist,
+    template < typename Config >
+    EntryData< types::HistT<Config>, Flags::value(Flags::Book::MultiShared) >
+    EntryDataBase< types::HistT<Config> >::multiShared() const {
+      return EntryData< types::HistT<Config>,
                         Flags::value(Flags::Book::MultiShared) >( *this ) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template<typename  T>
-    EntryData< T, types::Categories::Hist, 0 >::EntryData( 
-        const types::RAxisConfig &axis )
-      : EntryDataBase< T, types::Categories::Hist >() {
+    template<typename  Config>
+    EntryData< types::HistT<Config>, 0 >::EntryData( 
+        const typename types::HistT<Config>::AxisConfig_t &axis )
+      : EntryDataBase< types::HistT<Config> >() {
       static_assert(D == 1, "This is no 1D Hist, therefor it can't be constructed with 1 axis.");
-      this->axis(0) = std::make_unique<types::RAxisConfig>(axis) ;
+      this->axis(0) = std::make_unique<typename types::HistT<Config>::AxisConfig_t>(axis) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template < typename T>
-    EntryData< T, types::Categories::Hist, 0 >::EntryData(
-        const std::string_view &title, const types::RAxisConfig &axis )
-      : EntryDataBase< T >( title ) {
+    template < typename Config >
+    EntryData< types::HistT<Config>, 0 >::EntryData(
+        const std::string_view &title, const typename types::HistT<Config>::AxisConfig_t &axis )
+      : EntryDataBase< types::HistT<Config> >( title ) {
       static_assert(D == 1, "This is no 1D Hist, therefor it can't be constructed with 1 axis.");
-      this->axis(0) = std::make_unique<types::RAxisConfig>(axis) ;
+      this->axis(0) = std::make_unique<typename types::HistT<Config>::AxisConfig_t>(axis) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template < typename T>
-    EntryData< T, types::Categories::Hist, 0 >::EntryData(
-        const types::RAxisConfig &     x_axis,
-      const types::RAxisConfig &     y_axis )
-      : EntryDataBase< T >( ) {
+    template < typename Config >
+    EntryData< types::HistT<Config>, 0 >::EntryData(
+        const typename types::HistT<Config>::AxisConfig_t &     x_axis,
+      const typename types::HistT<Config>::AxisConfig_t &     y_axis )
+      : EntryDataBase< types::HistT<Config> >( ) {
       static_assert(D == 2, "This is no 2D Hist, therefor it can't be constructed with 2 axis.");
-      this->axis(0) = std::make_unique<types::RAxisConfig>(x_axis) ;
-      this->axis(1) = std::make_unique<types::RAxisConfig>(y_axis) ;
+      this->axis(0) = std::make_unique<typename types::HistT<Config>::AxisConfig_t>(x_axis) ;
+      this->axis(1) = std::make_unique<typename types::HistT<Config>::AxisConfig_t>(y_axis) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template < typename T>
-    EntryData< T, types::Categories::Hist, 0 >::EntryData(
+    template < typename Config >
+    EntryData< types::HistT<Config>, 0 >::EntryData(
         const std::string_view &title,
-      const types::RAxisConfig &     x_axis,
-      const types::RAxisConfig &     y_axis )
-      : EntryDataBase< T >( title ) {
+      const typename types::HistT<Config>::AxisConfig_t &     x_axis,
+      const typename types::HistT<Config>::AxisConfig_t &     y_axis )
+      : EntryDataBase< types::HistT<Config> >( title ) {
       static_assert(D == 2, "This is no 2D Hist, therefor it can't be constructed with 2 axis.");
-      this->axis(0) = std::make_unique<types::RAxisConfig>(x_axis) ;
-      this->axis(1) = std::make_unique<types::RAxisConfig>(y_axis) ;
+      this->axis(0) = std::make_unique<typename types::HistT<Config>::AxisConfig_t>(x_axis) ;
+      this->axis(1) = std::make_unique<typename types::HistT<Config>::AxisConfig_t>(y_axis) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template < typename T>
-    EntryData< T, types::Categories::Hist, 0 >::EntryData( 
-        const types::RAxisConfig &x_axis,
-      const types::RAxisConfig &y_axis,
-      const types::RAxisConfig &z_axis )
-      : EntryDataBase< T >() {
+    template < typename Config >
+    EntryData< types::HistT<Config>, 0 >::EntryData( 
+        const typename types::HistT<Config>::AxisConfig_t &x_axis,
+      const typename types::HistT<Config>::AxisConfig_t &y_axis,
+      const typename types::HistT<Config>::AxisConfig_t &z_axis )
+      : EntryDataBase< types::HistT<Config> >() {
       static_assert(D == 3, "This is no 3D Hist, therefor it can't be constructed with 3 axis.");
-      this->axis(0) = std::make_unique<types::RAxisConfig>(x_axis) ;
-      this->axis(1) = std::make_unique<types::RAxisConfig>(y_axis) ;
-      this->axis(2) = std::make_unique<types::RAxisConfig>(z_axis) ;
+      this->axis(0) = std::make_unique<typename types::HistT<Config>::AxisConfig_t>(x_axis) ;
+      this->axis(1) = std::make_unique<typename types::HistT<Config>::AxisConfig_t>(y_axis) ;
+      this->axis(2) = std::make_unique<typename types::HistT<Config>::AxisConfig_t>(z_axis) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template < typename T>
-    EntryData< T, types::Categories::Hist, 0 >::EntryData(
+    template < typename Config >
+    EntryData< types::HistT<Config>, 0 >::EntryData(
       const std::string_view &title,
-      const types::RAxisConfig &     x_axis,
-      const types::RAxisConfig &     y_axis,
-      const types::RAxisConfig &     z_axis )
-      : EntryDataBase< T >( title ) {
+      const typename types::HistT<Config>::AxisConfig_t &     x_axis,
+      const typename types::HistT<Config>::AxisConfig_t &     y_axis,
+      const typename types::HistT<Config>::AxisConfig_t &     z_axis )
+      : EntryDataBase< types::HistT<Config> >( title ) {
       static_assert(D == 3, "This is no 3D Hist, therefor it can't be constructed with 3 axis.");
-      this->axis(0) = std::make_unique<types::RAxisConfig>(x_axis) ;
-      this->axis(1) = std::make_unique<types::RAxisConfig>(y_axis) ;
-      this->axis(2) = std::make_unique<types::RAxisConfig>(z_axis) ;
+      this->axis(0) = std::make_unique<typename types::HistT<Config>::AxisConfig_t>(x_axis) ;
+      this->axis(1) = std::make_unique<typename types::HistT<Config>::AxisConfig_t>(y_axis) ;
+      this->axis(2) = std::make_unique<typename types::HistT<Config>::AxisConfig_t>(z_axis) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template <  typename T>
-    Handle< T, types::Categories::Hist >::Handle(
+    template < typename Config >
+    Handle< types::HistT<Config> >::Handle(
       const std::shared_ptr< MemLayout > &                        mem,
-      const std::shared_ptr< T > &              obj,
-      typename Handle< T, types::Categories::Hist >::FillFn_t     fillFn,
-      typename Handle< T, types::Categories::Hist >::FillNFn_t    fillNFn,
-      typename Handle< T, types::Categories::Hist >::FinalizeFn_t finalFn )
-      : BaseHandle< T >{mem, obj}, _fillFn{std::move(fillFn)},
+      const std::shared_ptr< types::HistT<Config> > &              obj,
+      typename Handle< types::HistT<Config> >::FillFn_t     fillFn,
+      typename Handle< types::HistT<Config> >::FillNFn_t    fillNFn,
+      typename Handle< types::HistT<Config> >::FinalizeFn_t finalFn )
+      : BaseHandle< types::HistT<Config> >{mem, obj}, _fillFn{std::move(fillFn)},
         _fillNFn{std::move(fillNFn)}, _finalFn{std::move(finalFn)} {}
 
     //--------------------------------------------------------------------------
 
-    template <  typename T>
-    void Handle< T, types::Categories::Hist >::fill(
-      const typename Handle< T, types::Categories::Hist >::CoordArray_t &x,
-      const typename Handle< T, types::Categories::Hist >::Weight_t &    w ) {
+    template < typename Config >
+    void Handle< types::HistT<Config> >::fill(
+      const typename Handle< types::HistT<Config> >::Point_t &x,
+      const typename Handle< types::HistT<Config> >::Weight_t &    w ) {
       _fillFn( x, w ) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template <  typename T>
-    void Handle< T, types::Categories::Hist >::fillN(
-      const types::CoordArraySpan_t<T >  &x,
-      const types::WeightSpan_t< T > &w ) {
-      _fillNFn( x, w ) ;
+    template < typename Config >
+    template < typename PointContainer, typename WeightContainer>
+    void Handle< types::HistT<Config> >::fillN(
+      const PointContainer &x,
+      const WeightContainer &w ) {
+      // FIXME: only for arrays and vectors
+      _fillNFn( &(*x.begin()), &(*x.end()), &(*w.begin()), &(*w.end()) ) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template <  typename T>
-    const T &Handle< T, types::Categories::Hist >::merged() {
+    template < typename Config >
+    const types::HistT<Config> &Handle< types::HistT<Config> >::merged() {
       _finalFn() ;
-      return BaseHandle< T >::merged() ;
+      return BaseHandle< types::HistT<Config> >::merged() ;
     }
 
     //--------------------------------------------------------------------------
 
-    template <  typename T>
-    EntrySingle< T, types::Categories::Hist >::EntrySingle( Context context )
+    template < typename Config >
+    EntrySingle< types::HistT<Config> >::EntrySingle( Context context )
       : _context{std::move(context)} {}
 
-    template <  typename T>
-    Handle< T, types::Categories::Hist > EntrySingle< T, types::Categories::Hist >::handle() {
-      using Hnd_t = Handle<T, types::Categories::Hist > ;
-      auto hist   = _context.mem->at< T >( 0 ) ;
+    template < typename Config >
+    Handle< types::HistT<Config> > EntrySingle< types::HistT<Config> >::handle() {
+      using Hnd_t = Handle<types::HistT<Config> > ;
+      auto hist   = _context.mem->at< Type >( 0 ) ;
       return Handle< Type >(
         _context.mem,
         hist,
-        [hist]( const typename Hnd_t::CoordArray_t &x,
+        [hist]( const typename Hnd_t::Point_t &x,
                 const typename Hnd_t::Weight_t &    w ) { hist->Fill( x, w ); },
-        [hist]( const types::CoordArraySpan_t< Hnd_t > &x,
-                const types::WeightSpan_t< Hnd_t >     &w ) {
-          hist->FillN( x, w ) ;
+        [hist]( const typename Type::Point_t *pFirst,
+                const typename Type::Point_t *pLast,
+                const typename Type::Weight_t *wFirst,
+                const typename Type::Weight_t *wLast) {
+          hist->FillN( pFirst, pLast, wFirst, wLast ) ;
         },
         []() {} ) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template <  typename T>
-    EntryMultiCopy< T, types::Categories::Hist >::EntryMultiCopy(
+    template < typename Config >
+    EntryMultiCopy< types::HistT<Config> >::EntryMultiCopy(
       Context context )
       : _context{std::move(context)} {}
 
-    template <  typename T>
-    Handle< T, types::Categories::Hist >
-    EntryMultiCopy< T, types::Categories::Hist >::handle( std::size_t idx ) {
-      using Hnd_t = Handle<T, types::Categories::Hist > ;
-      auto pHist  = _context.mem->at< T >( idx ) ;
-      return Handle< T >(
+    template < typename Config >
+    Handle< types::HistT<Config> >
+    EntryMultiCopy< types::HistT<Config> >::handle( std::size_t idx ) {
+      using Hnd_t = Handle< Type > ;
+      auto pHist  = _context.mem->at< Type >( idx ) ;
+      return Hnd_t(
         _context.mem,
         pHist,
-        [pHist]( const typename Hnd_t::CoordArray_t &x,
+        [pHist]( const typename Hnd_t::Point_t &x,
                  const typename Hnd_t::Weight_t &w ) { pHist->Fill( x, w ); },
-        [pHist]( const types::CoordArraySpan_t< Hnd_t > &x,
-                 const types::WeightSpan_t< Hnd_t >     &w ) {
-          pHist->FillN( x, w ) ;
+        [pHist]( const typename Type::Point_t *pFirst,
+                const typename Type::Point_t *pLast,
+                const typename Type::Weight_t *wFirst,
+                const typename Type::Weight_t *wLast) {
+          pHist->FillN( pFirst, pLast, wFirst, wLast ) ;
         },
         []() {} ) ;
     }
 
     //--------------------------------------------------------------------------
     
-    template <  typename T>
-    void EntryMultiShared< T, types::Categories::Hist >::flush() {
+    template < typename Config >
+    void EntryMultiShared< types::HistT<Config> >::flush() {
       for ( auto &filler : _fillers ) {
         if ( auto ptr = filler.lock() ) {
           ptr->Flush() ;
@@ -220,85 +223,87 @@ namespace marlin {
 
     //--------------------------------------------------------------------------
     
-    template <  typename T>
-    EntryMultiShared< T, types::Categories::Hist >::EntryMultiShared(
+    template < typename Config >
+    EntryMultiShared< types::HistT<Config> >::EntryMultiShared(
       Context context )
       : _context{std::move(context)},
         _fillMgr{
-          std::make_shared< types::RHistConcurrentFillManager< T  > >(
-            *_context.mem->at< T >( 0 ) )},
+          std::make_shared< types::HistConcurrentFillManager< Config  > >(
+            *_context.mem->at< Type >( 0 ) )},
         _fillers( 0 ) {}
 
     //--------------------------------------------------------------------------
 
-    template <  typename T>
-    EntryMultiShared< T, types::Categories::Hist >::~EntryMultiShared() {
+    template < typename Config >
+    EntryMultiShared< types::HistT<Config> >::~EntryMultiShared() {
       flush() ;
     }
 
     //--------------------------------------------------------------------------
 
-    template <  typename T>
-    Handle< T, types::Categories::Hist >
-    EntryMultiShared< T, types::Categories::Hist >::handle() {
-      using Hnd_t = T ;
+    template < typename Config >
+    Handle< types::HistT<Config> >
+    EntryMultiShared< types::HistT<Config> >::handle() {
+      using Hnd_t = Handle<Type> ;
       auto pFiller
-        = std::make_shared< types::RHistConcurrentFiller< T  > >(
+        = std::make_shared< types::HistConcurrentFiller< Config > >(
           *_fillMgr ) ;
       _fillers.push_back( pFiller ) ;
-      return Handle< T, types::Categories::Hist >(
+      return Hnd_t(
         _context.mem,
-        _context.mem->at< T >( 0 ),
-        [pFiller = pFiller]( const typename Hnd_t::CoordArray_t &x,
+        _context.mem->at< Type >( 0 ),
+        [pFiller = pFiller]( const typename Hnd_t::Point_t &x,
                              const typename Hnd_t::Weight_t &    w ) {
           pFiller->Fill( x, w ) ;
         },
-        [pFiller = pFiller]( const types::CoordArraySpan_t< Hnd_t > &x,
-                             const types::WeightSpan_t< Hnd_t >     &w ) {
-          pFiller->FillN( x, w ) ;
+        [pFiller]( const typename Type::Point_t *pFirst,
+                const typename Type::Point_t *pLast,
+                const typename Type::Weight_t *wFirst,
+                const typename Type::Weight_t *wLast) {
+          pFiller->FillN( pFirst, pLast,wFirst, wLast ) ;
         },
         [this]() { this->flush(); } ) ;
     }
 
     //--------------------------------------------------------------------------
 
-    template< typename T>
+    template < typename Config >
     template < typename... Args_t, int d >
     std::enable_if_t< d == 1, std::shared_ptr<Entry> >
-    EntryData<T, types::Categories::Hist, Flags::value(Flags::Book::Single)>
+    EntryData<types::HistT<Config>, Flags::value(Flags::Book::Single)>
       ::book( BookStore &store, const Args_t &... args ) const {
-      return store.bookSingle< T,
+      return store.bookSingle< Object_t,
                                const std::string_view &,
-                               const types::RAxisConfig & >(
+                               const typename types::HistT<Config>::AxisConfig_t & >(
         args..., _data.title(), *_data.axis(0) ) ;
     }
 
     //--------------------------------------------------------------------------
     
-    template< typename T>
+    template < typename Config >
     template < typename... Args_t, int d >
     std::enable_if_t< d == 2, std::shared_ptr<Entry>>
-    EntryData<T, types::Categories::Hist, Flags::value(Flags::Book::Single)>
+    EntryData<types::HistT<Config>, Flags::value(Flags::Book::Single)>
       ::book( BookStore &store, const Args_t &... args ) const {
-      return store.bookSingle< T,
+      return store.bookSingle< Object_t,
                                const std::string_view &,
-                               const types::RAxisConfig &,
-                               const types::RAxisConfig & >(
+                               const typename types::HistT<Config>::AxisConfig_t &,
+                               const typename types::HistT<Config>::AxisConfig_t & >(
         args..., _data.title(), *_data.axis(0), *_data.axis(1) ) ;
     }
 
     //--------------------------------------------------------------------------
     
-    template< typename T>
+    template < typename Config >
     template < typename... Args_t, int d >
     std::enable_if_t< d == 3, std::shared_ptr<Entry> >
-    EntryData<T, types::Categories::Hist, Flags::value(Flags::Book::Single)>
+    EntryData<types::HistT<Config>, Flags::value(Flags::Book::Single)>
       ::book( BookStore &store, const Args_t &... args ) const {
-      return store.bookSingle< T,
+      return store.bookSingle< Object_t,
                                const std::string_view &,
-                               const types::RAxisConfig &,
-                               const types::RAxisConfig &,
-                               const types::RAxisConfig & >(
+                               const typename types::HistT<Config>::AxisConfig_t &,
+                               const typename types::HistT<Config>::AxisConfig_t &,
+                               const typename types::HistT<Config>::AxisConfig_t & >(
         args...,
         _data.title(),
         *_data.axis(0),
@@ -308,49 +313,46 @@ namespace marlin {
 
     //--------------------------------------------------------------------------
     
-    template< typename T>
+    template < typename Config >
     template < typename... Args_t, int d >
     std::enable_if_t< d == 1, std::shared_ptr<Entry> >
-    EntryData<T, types::Categories::Hist, Flags::value(Flags::Book::MultiCopy)>
+    EntryData<types::HistT<Config>, Flags::value(Flags::Book::MultiCopy)>
       ::book( BookStore &store, const Args_t &... args ) const {
-      using Type = T ;
-      return store.bookMultiCopy< Type,
-                                  &types::addHists,
+      return store.bookMultiCopy< Object_t,
+                                  &types::add,
                                   const std::string_view &,
-                                  const types::RAxisConfig & >(
+                                  const typename types::HistT<Config>::AxisConfig_t & >(
         _n, args..., _data.title(), *_data.axis(0) ) ;
     }
 
     //--------------------------------------------------------------------------
     
-    template< typename T>
+    template < typename Config >
     template < typename... Args_t, int d >
     std::enable_if_t< d == 2, std::shared_ptr<Entry> >
-    EntryData<T, types::Categories::Hist, Flags::value(Flags::Book::MultiCopy)>
+    EntryData<types::HistT<Config>, Flags::value(Flags::Book::MultiCopy)>
       ::book( BookStore &store, const Args_t &... args ) const {
-      using Type = T ;
-      return store.bookMultiCopy<Type,
-                                  &types::addHists,
+      return store.bookMultiCopy<Object_t,
+                                  &types::add,
                                   const std::string_view &,
-                                  const types::RAxisConfig &,
-                                  const types::RAxisConfig & >(
+                                  const typename types::HistT<Config>::AxisConfig_t &,
+                                  const typename types::HistT<Config>::AxisConfig_t & >(
         _n, args..., _data.title(), *_data.axis(0), *_data.axis(1) ) ;
     }
 
     //--------------------------------------------------------------------------
     
-    template< typename T>
+    template < typename Config >
     template < typename... Args_t, int d >
     std::enable_if_t< d == 3, std::shared_ptr<Entry> >
-    EntryData<T, types::Categories::Hist, Flags::value(Flags::Book::MultiCopy)>
+    EntryData<types::HistT<Config>, Flags::value(Flags::Book::MultiCopy)>
       ::book( BookStore &store, const Args_t &... args ) const {
-      using Type = T ;
-      return store.bookMultiCopy< Type,
-                                  &types::addHists,
+      return store.bookMultiCopy< Object_t,
+                                  &types::add,
                                   const std::string_view &,
-                                  const types::RAxisConfig &,
-                                  const types::RAxisConfig &,
-                                  const types::RAxisConfig & >(
+                                  const typename types::HistT<Config>::AxisConfig_t &,
+                                  const typename types::HistT<Config>::AxisConfig_t &,
+                                  const typename types::HistT<Config>::AxisConfig_t & >(
         _n,
         args...,
         _data.title(),
@@ -361,43 +363,43 @@ namespace marlin {
     
     //--------------------------------------------------------------------------
     
-    template< typename T>
+    template < typename Config >
     template < typename... Args_t, int d >
     std::enable_if_t< d == 1, std::shared_ptr<Entry> >
-    EntryData<T, types::Categories::Hist, Flags::value(Flags::Book::MultiShared)>
+    EntryData<types::HistT<Config>, Flags::value(Flags::Book::MultiShared)>
       ::book( BookStore &store, const Args_t &... args ) const {
-      return store.bookMultiShared< T,
+      return store.bookMultiShared< Object_t,
                                     const std::string_view &,
-                                    const types::RAxisConfig & >(
+                                    const typename types::HistT<Config>::AxisConfig_t & >(
         args..., _data.title(), *_data.axis(0) ) ;
     }
 
     //--------------------------------------------------------------------------
     
-    template< typename T>
+    template < typename Config >
     template < typename... Args_t, int d >
     std::enable_if_t< d == 2, std::shared_ptr<Entry> >
-    EntryData<T, types::Categories::Hist, Flags::value(Flags::Book::MultiShared)>
+    EntryData<types::HistT<Config>, Flags::value(Flags::Book::MultiShared)>
       ::book( BookStore &store, const Args_t &... args ) const {
-      return store.bookMultiShared< T,
+      return store.bookMultiShared< Object_t,
                                     const std::string_view &,
-                                    const types::RAxisConfig &,
-                                    const types::RAxisConfig & >(
+                                    const typename types::HistT<Config>::AxisConfig_t &,
+                                    const typename types::HistT<Config>::AxisConfig_t & >(
         args..., _data.title, *_data.axis(0), *_data.axis(1) ) ;
     }
 
     //--------------------------------------------------------------------------
     
-    template< typename T>
+    template < typename Config >
     template < typename... Args_t, int d >
     std::enable_if_t< d == 3, std::shared_ptr<Entry> >
-    EntryData<T, types::Categories::Hist, Flags::value(Flags::Book::MultiShared)>
+    EntryData<types::HistT<Config>, Flags::value(Flags::Book::MultiShared)>
       ::book( BookStore &store, const Args_t &... args ) const {
-      return store.bookMultiShared< T,
+      return store.bookMultiShared< Object_t,
                                     const std::string_view &,
-                                    const types::RAxisConfig &,
-                                    const types::RAxisConfig &,
-                                    const types::RAxisConfig & >(
+                                    const typename types::HistT<Config>::AxisConfig_t &,
+                                    const typename types::HistT<Config>::AxisConfig_t &,
+                                    const typename types::HistT<Config>::AxisConfig_t & >(
         args...,
         _data.title(),
         *_data.axis(0),

@@ -50,7 +50,7 @@ namespace marlin {
      *  @brief vanilla Handle.
      *  @tparam T type which should be handled.
      */
-    template < typename T, types::Categories C>
+    template < typename T >
     class Handle : public BaseHandle< T > {
     public:
       /// constructor

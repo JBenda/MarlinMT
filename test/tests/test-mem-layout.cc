@@ -33,10 +33,10 @@ int main (int, char**) {
   ptr2->bins[0] += 2;
   test.test("bin content test ", sMem.merged<Type1>()->bins[0] == 9);
 
-  SharedMemLayout<RH1I, addHists<RH1I,RH1I>, RAxisConfig> sMemH(3, {"x", 2, 0, RAND_MAX});
-  RH1D refHist({"x", 2, 0, RAND_MAX});
-  auto ptrH1 = sMemH.at<RH1I>(0);
-  auto ptrH2 = sMemH.at<RH1I>(1);
+  SharedMemLayout<H1I, add<HistConfig<double, int, 1>>, AxisConfig<double>> sMemH(3, {"x", 2, 0, RAND_MAX});
+  H1D refHist(AxisConfig<double>("x", 2, 0, RAND_MAX));
+  auto ptrH1 = sMemH.at<H1I>(0);
+  auto ptrH2 = sMemH.at<H1I>(1);
 
   for(int i = 0; i < 10; ++i) {
     double x
@@ -45,16 +45,16 @@ int main (int, char**) {
 
     if(std::rand() > RAND_MAX / 2) {
       ptrH1->Fill({x}, w);
-      std::cout << ptrH1->GetBinContent({x});
+      std::cout << ptrH1->get().GetBinContent({x});
     } else {
       ptrH2->Fill({x}, w);
-      std::cout << ptrH2->GetBinContent({x});
+      std::cout << ptrH2->get().GetBinContent({x});
     }
     refHist.Fill({x}, w);
   }
 
-  test.test("Test shared RH1D", 
-    refHist.GetBinContent({0}) == sMemH.merged<RH1I>()->GetBinContent({0})
+  test.test("Test shared H1D", 
+    refHist.get().GetBinContent({0}) == sMemH.merged<H1I>()->get().GetBinContent({0})
   ) ;
   return 0;
 }

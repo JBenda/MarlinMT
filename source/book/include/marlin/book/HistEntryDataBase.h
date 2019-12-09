@@ -13,42 +13,40 @@ namespace marlin {
     /**
      *  @brief Base for Histogram EntryData.
      */
-    template < class T >
-    class EntryDataBase< T, types::Categories::Hist >
+    template < class Config >
+    class EntryDataBase< types::HistT<Config>>
       : public EntryDataBase< void > {
-      template < typename, types::Categories, unsigned long long >
+      template < typename, unsigned long long >
       friend class EntryData ;
       static constexpr std::string_view empty{""} ;
+    protected:
+
+      using Type = types::HistT<Config>;
+      static constexpr int D = Type::Dimension;
     public:
+
       explicit EntryDataBase( const std::string_view &title = empty ) ;
 
       /**
        *  @brief construct EntryData for single booking.
        */
-      EntryData< T,
-                 types::Categories::Hist,
-                 Flags::value( Flags::Book::Single ) >
+      EntryData< Type, Flags::value( Flags::Book::Single ) >
       single() const ;
 
       /**
        *  @brief construct EntryData for multi copy booking.
        *  @param n number of memory instances which should be constructed
        */
-      [[nodiscard]] EntryData< T,
-                               types::Categories::Hist,
-                               Flags::value( Flags::Book::MultiCopy ) >
+      [[nodiscard]] EntryData< Type,  Flags::value( Flags::Book::MultiCopy ) >
       multiCopy( std::size_t n ) const ;
 
       /**
        *  @brief construct EntryData for multi shared booking.
        */
-      [[nodiscard]] EntryData< T,
-                               types::Categories::Hist,
-                               Flags::value( Flags::Book::MultiShared ) >
+      [[nodiscard]] EntryData< Type, Flags::value( Flags::Book::MultiShared ) >
       multiShared() const ;
 
     protected:
-      static constexpr int D = types::TypeInfo<T>::dimension;
 
       /**
        *  @brief read access for passed title.
@@ -59,7 +57,7 @@ namespace marlin {
        *  @brief access Histogram axis configuration.
        *  @param id of axis, start by 0.
        */
-      [[nodiscard]] std::unique_ptr< types::RAxisConfig > &
+      [[nodiscard]] std::unique_ptr< typename Type::AxisConfig_t > &
       axis( const std::size_t id ) {
         return _axis.at( id ) ;
       }
@@ -68,7 +66,7 @@ namespace marlin {
        *  @brief access Histogram axis configuration. Can't Modified.
        *  @param id of axis, start by 0.
        */
-      [[nodiscard]] const std::unique_ptr< types::RAxisConfig > &
+      [[nodiscard]] const std::unique_ptr< typename Type::AxisConfig_t > &
       axis( const std::size_t id ) const {
         return _axis.at( id ) ;
       }
@@ -77,7 +75,7 @@ namespace marlin {
       /// Histogram custom title, length = 0 when nothing setted.
       const std::string_view &_title ;
       /// Histogram axis configuration.
-      std::array< std::unique_ptr< types::RAxisConfig >, D > _axis{} ;
+      std::array< std::unique_ptr< typename Type::AxisConfig_t >, D > _axis{} ;
     } ;
   } // end namespace book
 } // end namespace marlin

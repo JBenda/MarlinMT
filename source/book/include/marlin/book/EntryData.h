@@ -44,7 +44,7 @@ namespace marlin {
     /**
      *  @brief Base Class for Entry Data, for similar behavior.
      */
-    template < class T , types::Categories C = types::category_of<T>>
+    template < class T >
     class EntryDataBase {} ;
 
     template <>
@@ -65,7 +65,7 @@ namespace marlin {
     /**
      * @brief Container for data to construct and setup booked object.
      */
-    template < class T, types::Categories C  =  types::category_of<T>, unsigned long long = 0 >
+    template < class T, unsigned long long = 0>
     class EntryData : public EntryDataBase< void > {} ;
 
     /**

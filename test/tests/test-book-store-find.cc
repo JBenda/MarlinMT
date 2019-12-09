@@ -18,15 +18,15 @@ int main( int /*argc*/, char * /*argv*/[] ) {
   constexpr float        min          = -1.F ;
   constexpr float        max          = 5.F ;
   constexpr int          nItrerations = 10 ;
-  RAxisConfig            axis( "a", bins, min, max ) ;
+  AxisConfig<double>            axis( "a", bins, min, max ) ;
   try {
     {
       BookStore store{} ;
-      store.book( "/path/", "name", EntryData< RH1F >( axis ).single() ) ;
-      store.book( "/path_2/", "name", EntryData< RH1I >( axis ).single() ) ;
+      store.book( "/path/", "name", EntryData< H1F >( axis ).single() ) ;
+      store.book( "/path_2/", "name", EntryData< H1I >( axis ).single() ) ;
 
       auto selection  = store.find( ConditionBuilder().setName( "name" ) ) ;
-      auto selection1 = store.find( ConditionBuilder().setType< RH1I >() ) ;
+      auto selection1 = store.find( ConditionBuilder().setType< H1I >() ) ;
       auto selection2 = store.find( ConditionBuilder().setPath( "/path_2/" ) ) ;
       auto selection3
         = store.find( ConditionBuilder().setPath( std::regex( "path(|_2)" ) ) ) ;
@@ -51,7 +51,7 @@ int main( int /*argc*/, char * /*argv*/[] ) {
       BookStore   store{} ;
       std::string path = std::string( "/" ) + unicStr() + '/' ;
       std::string name ;
-      EntryData   config = EntryData< RH1I >( axis ) ;
+      EntryData   config = EntryData< H1I >( axis ) ;
       for ( int i = 0; i < nItrerations; ++i ) {
         name = unicStr() ;
         store.book( path, name, config.single() ) ;
@@ -92,9 +92,9 @@ int main( int /*argc*/, char * /*argv*/[] ) {
     }
     {
       BookStore store{} ;
-      store.book( "/", "name", EntryData< RH1I >( axis ).single() ) ;
-      store.book( "/path/", "name", EntryData< RH1I >( axis ).single() ) ;
-      store.book( "/", "other", EntryData< RH1I >( axis ).single() ) ;
+      store.book( "/", "name", EntryData< H1I >( axis ).single() ) ;
+      store.book( "/path/", "name", EntryData< H1I >( axis ).single() ) ;
+      store.book( "/", "other", EntryData< H1I >( axis ).single() ) ;
 
       Selection sel = store.find( ConditionBuilder().setName( "name" ) ) ;
       Selection rem = store.find( !sel.condition() ) ;
@@ -124,17 +124,17 @@ int main( int /*argc*/, char * /*argv*/[] ) {
     }
     {
       BookStore                 store{} ;
-      Handle< Manager< RH1F > > e
-        = store.book( "/path/", "my Name", EntryData< RH1F >( axis ).single() ) ;
+      Handle< Manager< H1F > > e
+        = store.book( "/path/", "my Name", EntryData< H1F >( axis ).single() ) ;
       e.handle( 1 ).fill( {0}, 1 ) ;
 
       Selection sel    = store.find( ConditionBuilder().setName( "my Name" ) ) ;
-      Handle< RH1F > h = sel.begin()->handle< RH1F >().handle( 1 ) ;
+      Handle< H1F > h = sel.begin()->handle< H1F >().handle( 1 ) ;
       h.fill( {0}, 1 ) ;
 
       test.test( "Get booked entry from BookStore",
-                 e.handle( 1 ).merged().GetBinContent( {0} ) == 2
-                   && h.merged().GetBinContent( {0} ) == 2 ) ;
+                 e.handle( 1 ).merged().get().GetBinContent( {0} ) == 2
+                   && h.merged().get().GetBinContent( {0} ) == 2 ) ;
     }
   } catch ( const marlin::BookStoreException &excp ) {
     test.test( std::string( "unexpected exception: '" ) + excp.what() + "'",
