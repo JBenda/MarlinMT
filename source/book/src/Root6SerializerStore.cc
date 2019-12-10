@@ -28,14 +28,14 @@ using DirectoryMap = std::unordered_map<std::filesystem::path, TDirectory*, Path
 template<typename T>  
 void writeObject( TDirectory* file, const std::string_view& name, const T& obj) {
 
-  auto root6Obj = marlin::book::types::toRoot6(
-        obj,
-        name) ;
+  auto root6Obj = marlin::book::types::toRoot6(obj, name);
 
-  file->WriteTObject(
-      &root6Obj,
-      std::string(name).c_str()
-  ) ;
+	if constexpr (!std::is_same_v<decltype(toRoot6(obj,name)), decltype(nullptr)>) {
+		file->WriteTObject(
+				&root6Obj,
+				std::string(name).c_str()
+		) ;
+	}
 }
 
 

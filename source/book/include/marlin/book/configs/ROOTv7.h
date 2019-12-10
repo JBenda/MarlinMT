@@ -19,10 +19,6 @@ namespace marlin {
   namespace book {
     namespace types {
 
-      template<typename Config>
-      auto toRoot6(const HistT<Config>& hist, const std::string_view& name){
-        return into_root6_hist(hist.get(), std::string(name).c_str());
-      }
 
       template<typename T = double>
       class AxisConfig;
@@ -46,7 +42,7 @@ namespace marlin {
         using Weight_t = Weight;\
         using Precision_t = double;\
         using Impl_t = Impl;\
-        using ConcurrentModifiyer_t \
+        using ConcurrentFiller_t \
           = ROOT::Experimental::RHistConcurrentFiller<Impl, HistogramFillerBufferSize>;\
         using ConcurrentManager_t \
           = ROOT::Experimental::RHistConcurrentFillManager<Impl, HistogramFillerBufferSize>;\
@@ -55,14 +51,14 @@ namespace marlin {
       using Alias = HistT<HistConfig<double, Weight, Dim>>
 
       HistConfig_ROOT(H1F, ROOT::Experimental::RH1F, float, 1);
-      HistConfig_ROOT(H1D, ROOT::Experimental::RH1F, double, 1);
-      HistConfig_ROOT(H1I, ROOT::Experimental::RH1F, int, 1);
+      HistConfig_ROOT(H1D, ROOT::Experimental::RH1D, double, 1);
+      HistConfig_ROOT(H1I, ROOT::Experimental::RH1I, int, 1);
       HistConfig_ROOT(H2F, ROOT::Experimental::RH2F, float, 2);
-      HistConfig_ROOT(H2D, ROOT::Experimental::RH2F, double, 2);
-      HistConfig_ROOT(H2I, ROOT::Experimental::RH2F, int, 2);
+      HistConfig_ROOT(H2D, ROOT::Experimental::RH2D, double, 2);
+      HistConfig_ROOT(H2I, ROOT::Experimental::RH2I, int, 2);
       HistConfig_ROOT(H3F, ROOT::Experimental::RH3F, float, 3);
-      HistConfig_ROOT(H3D, ROOT::Experimental::RH3F, double, 3);
-      HistConfig_ROOT(H3I, ROOT::Experimental::RH3F, int, 3);
+      HistConfig_ROOT(H3D, ROOT::Experimental::RH3D, double, 3);
+      HistConfig_ROOT(H3I, ROOT::Experimental::RH3I, int, 3);
 
 
       template<typename Config>
@@ -183,6 +179,12 @@ namespace marlin {
         return to;
       }
 
+
+			template<typename Config>
+			auto toRoot6(const HistT<Config>& hist, const std::string_view& name) {
+        return into_root6_hist(hist.get(), std::string(name).c_str());
+			}
+
       template<typename Config>
       void add(
           const std::shared_ptr<HistT<Config>>& to,
@@ -207,6 +209,7 @@ namespace marlin {
         _impl.Fill(toConfig(p), w);
         static_assert(std::is_same_v<typename Config::Precision_t, double>);
       }
+
 
       template<typename Config>
       void HistConcurrentFiller<Config>::template FillN(
