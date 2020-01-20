@@ -42,6 +42,9 @@ namespace marlin {
     }
     // initialize logging
     _loggerMgr.init( this ) ;
+    // initialize BookStore
+    _bookStoreManager = std::make_unique<BookStoreManager>();
+    _bookStoreManager->init( this ) ;
     // check at this point for a scheduler instance
     if( nullptr == _scheduler ) {
       logger()->log<MESSAGE>() << "No scheduler set. Using SimpleScheduler (single threaded program)" << std::endl ;
@@ -386,6 +389,52 @@ namespace marlin {
         << "Event uid " << event->uid()
         << " finished" << std::endl ;
     }
+  }
+
+  //--------------------------------------------------------------------------
+  
+  std::size_t Application::getConcurrency() const {
+    if ( _concurrency == 0 ) {
+      _loggerMgr.mainLogger()->log<ERROR>() 
+        << "concurrency is not well defined yet, but already used!";
+    }
+    return _concurrency;
+  }
+
+  //--------------------------------------------------------------------------
+  
+  std::size_t Application::readConcurrency() {
+    auto globals = globalParameters() ;
+    auto ccyStr = globals->getValue<std::string>( "Concurrency", "auto" ) ;
+    // The concurrency read from the steering file
+    std::size_t ccy = (ccyStr == "auto" ?
+      std::thread::hardware_concurrency() :
+      StringUtil::stringToType<std::size_t>(ccyStr) ) ;
+    Logger logger = _loggerMgr.mainLogger();
+    logger->log<DEBUG5>() << "-- Application concurrency from steering file " << ccy << std::endl ;
+    logger->log<DEBUG5>() << "-- Hardware concurrency: " << std::thread::hardware_concurrency() << std::endl ;
+    if ( ccy <= 0 ) {
+      logger->log<ERROR>() << "-- Couldn't determine number of threads to use (computed=" << ccy << ")" << std::endl ;
+      throw Exception( "Undefined concurrency level" ) ;
+    }
+    logger->log<MESSAGE>() << "-- Application concurrency set to " << ccy << std::endl ;
+    if ( ccy > std::thread::hardware_concurrency() ) {
+      logger->log<WARNING>() << "-- Application concurrency higher than the number of supported threads on your machine --" << std::endl ;
+      logger->log<WARNING>() << "---- application: " << ccy << std::endl ;
+      logger->log<WARNING>() << "---- hardware:    " << std::thread::hardware_concurrency() << std::endl ;
+    }
+    if ( ccy == 1 ) {
+      logger->log<WARNING>() << "-- The program will run on a single thread --" << std::endl ;
+      // TODO should we throw here ?? 
+      // JBenda: no, else the user needs a different program when he only want's to use 1 core 
+    }
+    return ccy;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  BookStoreManager &Application::bookStoreManager() const {
+    return *_bookStoreManager ;
   }
 
 } // namespace marlin

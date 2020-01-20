@@ -153,6 +153,7 @@ namespace marlin{
             processconditions( section , "" ) ;
 
             try {
+              // FIXME: overlap with Application read Concurrency 
               std::string ccyStr = getAttribute( section, "concurrency" ) ;
               if( ccyStr == "auto" ) {
                 unsigned int ccy = std::thread::hardware_concurrency() ;
@@ -300,7 +301,7 @@ namespace marlin{
                 ++typedProcCount ; // at least one type info attribute found in processor
             }
             //       else {
-            // 	std::cout << " -- processor w/o type info : " << name << std::endl ;
+            //  std::cout << " -- processor w/o type info : " << name << std::endl ;
             //       }
 
             ++procCount ;
@@ -328,43 +329,43 @@ namespace marlin{
         //
         //     else if( procCount > typedProcCount ){
         //       std::cout  << "---------------------------------------------------------------------" << std::endl
-        // 		 << "  WARNING XMLParser : some of the available processors don't have    " << std::endl
-        // 		 << "  input or output collection information assigned. This is           " << std::endl
-        // 		 << "  needed to check the steering file for consistency with 'Marlin -c'." << std::endl
-        // 		 << "  Please use Processor::registerInputCollection() and                " << std::endl
-        // 		 << "  Processor::registerOutputCollection()  in you Marlin processors    " << std::endl
-        // 		 << "  and create a new steering file with 'Marlin -x > newsteer.xml'     " << std::endl
-        // 		 << "  or add the appropriate information to your existing steering files " << std::endl
-        // 		 << "---------------------------------------------------------------------" << std::endl ;
+        //     << "  WARNING XMLParser : some of the available processors don't have    " << std::endl
+        //     << "  input or output collection information assigned. This is           " << std::endl
+        //     << "  needed to check the steering file for consistency with 'Marlin -c'." << std::endl
+        //     << "  Please use Processor::registerInputCollection() and                " << std::endl
+        //     << "  Processor::registerOutputCollection()  in you Marlin processors    " << std::endl
+        //     << "  and create a new steering file with 'Marlin -x > newsteer.xml'     " << std::endl
+        //     << "  or add the appropriate information to your existing steering files " << std::endl
+        //     << "---------------------------------------------------------------------" << std::endl ;
         //     }
 
 
-	// ======    check if we have unused cmd line parameter overwrites
-	if( _cmdlineparams.size() > 0 ) {
+  // ======    check if we have unused cmd line parameter overwrites
+  if( _cmdlineparams.size() > 0 ) {
 
-	  std::stringstream str ;
-	  str  << "Unknwon command line parameter overwrite ( spelling !?) : \n " ;
+    std::stringstream str ;
+    str  << "Unknwon command line parameter overwrite ( spelling !?) : \n " ;
 
-	  typedef CommandLineParametersMap::iterator IT ;
+    typedef CommandLineParametersMap::iterator IT ;
 
-	  for( IT itP=_cmdlineparams.begin() ; itP != _cmdlineparams.end() ; ++itP ){
+    for( IT itP=_cmdlineparams.begin() ; itP != _cmdlineparams.end() ; ++itP ){
 
-	    std::string index1 = itP->first ;
+      std::string index1 = itP->first ;
 
-	    typedef CommandLineParametersMap::mapped_type ValMap ;
+      typedef CommandLineParametersMap::mapped_type ValMap ;
 
-	    ValMap* clp_map = &itP->second ;
+      ValMap* clp_map = &itP->second ;
 
-	    for( ValMap::iterator it = clp_map->begin() , end = clp_map->end() ;  it!=end ; ++it ) {
-	      str << "   " << index1 << "." << it->first << " : " << it->second << "\n"   ;
-	    }
-	  }
+      for( ValMap::iterator it = clp_map->begin() , end = clp_map->end() ;  it!=end ; ++it ) {
+        str << "   " << index1 << "." << it->first << " : " << it->second << "\n"   ;
+      }
+    }
 
-	  str << " Note: only parameters that are present in the Marlin steering file can be overwritten !!! " << "\n"  ;
+    str << " Note: only parameters that are present in the Marlin steering file can be overwritten !!! " << "\n"  ;
 
-	  throw ParseException( str.str() ) ;
-	}
-	//===================================================================
+    throw ParseException( str.str() ) ;
+  }
+  //===================================================================
     }
 
     void XMLParser::write(const std::string &filen) const{
@@ -406,21 +407,21 @@ namespace marlin{
 
         std::string index1, index2, cmdlinevalues ;
 
-	//  std::cout << " ******************************* "  <<std::endl ;
+  //  std::cout << " ******************************* "  <<std::endl ;
 
-	index1 = section->Value() ;
-	if( index1.compare( "processor" ) == 0 ){
-	  index1 = getAttribute( section, "name") ;
-	}
+  index1 = section->Value() ;
+  if( index1.compare( "processor" ) == 0 ){
+    index1 = getAttribute( section, "name") ;
+  }
 
-	// try and get a map of overwritten cmd line parameters for this processor
-	typedef CommandLineParametersMap::mapped_type ValMap ;
-	ValMap* clp_map = 0 ;
-	CommandLineParametersMap::iterator clp_it = _cmdlineparams.find( index1 ) ;
-	if( clp_it != _cmdlineparams.end() ){  // found some command line parameters for this section
-	  clp_map = &( clp_it->second ) ;
-	}
-	// CommandLineParametersMap::mapped_type clp_map = _cmdlineparams[ index1 ] ;
+  // try and get a map of overwritten cmd line parameters for this processor
+  typedef CommandLineParametersMap::mapped_type ValMap ;
+  ValMap* clp_map = 0 ;
+  CommandLineParametersMap::iterator clp_it = _cmdlineparams.find( index1 ) ;
+  if( clp_it != _cmdlineparams.end() ){  // found some command line parameters for this section
+    clp_map = &( clp_it->second ) ;
+  }
+  // CommandLineParametersMap::mapped_type clp_map = _cmdlineparams[ index1 ] ;
 
 
         while( ( par = section->IterateChildren( "parameter", par ) )  != 0  ){
@@ -431,8 +432,8 @@ namespace marlin{
             // std::transform(index1.begin(), index1.end(), index1.begin(), ::toupper);
             // std::transform(index2.begin(), index2.end(), index2.begin(), ::toupper);
 
-	    //std::cout << " ******** parameter found : " << par->ToElement()->Attribute("name") << std::endl ;
-	    //std::cout << " ***** xml parameter: " << index1 << ": " << index2 << std::endl ;
+      //std::cout << " ******** parameter found : " << par->ToElement()->Attribute("name") << std::endl ;
+      //std::cout << " ***** xml parameter: " << index1 << ": " << index2 << std::endl ;
 
             std::vector<std::string> tokens ;
 
@@ -458,38 +459,38 @@ namespace marlin{
 
 
             //       if( par->ToElement()->Attribute("value") != 0 ) {
-            // 	inputLine = par->ToElement()->Attribute("value") ;
+            //  inputLine = par->ToElement()->Attribute("value") ;
             //       }
             //       else if( par->FirstChild() ) {
-            // 	inputLine =  par->FirstChild()->Value() ;
+            //  inputLine =  par->FirstChild()->Value() ;
             //       }
 
 
 
-	    // cmdlinevalues = _cmdlineparams[ index1 ][ index2 ] ;
+      // cmdlinevalues = _cmdlineparams[ index1 ][ index2 ] ;
             // if( cmdlinevalues.compare( "" ) != 0 ){
             //     inputLine = cmdlinevalues ; // overwrite steering file parameters with command line ones
             // }
 
-	    // ---- check we have a cmd line param overwrite
-	    if( clp_map != 0 ) {
+      // ---- check we have a cmd line param overwrite
+      if( clp_map != 0 ) {
 
-	      ValMap::iterator vm_it = clp_map->find(  index2 ) ;
+        ValMap::iterator vm_it = clp_map->find(  index2 ) ;
 
-	      if( vm_it != clp_map->end() ) {
+        if( vm_it != clp_map->end() ) {
 
-		cmdlinevalues = vm_it->second ;
+    cmdlinevalues = vm_it->second ;
 
-		if( cmdlinevalues.compare( "" ) != 0 ){
+    if( cmdlinevalues.compare( "" ) != 0 ){
 
-		  inputLine = cmdlinevalues ; // overwrite steering file parameters with command line ones
+      inputLine = cmdlinevalues ; // overwrite steering file parameters with command line ones
 
-		  //	  std::cout << " ###############  will replace " << index1 << "." << index2 << " with : " << cmdlinevalues << std::endl ;
+      //    std::cout << " ###############  will replace " << index1 << "." << index2 << " with : " << cmdlinevalues << std::endl ;
 
-		  clp_map->erase( vm_it ) ;
-		}
-	      }
-	    }
+      clp_map->erase( vm_it ) ;
+    }
+        }
+      }
 
       // replace the pre-processed parameter value in the xml tree
       try{
@@ -517,7 +518,7 @@ namespace marlin{
             std::for_each( inputLine.begin(),inputLine.end(), t ) ;
 
             //        for( StringVec::iterator it = tokens.begin() ; it != tokens.end() ; it++ ){
-            //  	std::cout << "  " << *it ;
+            //    std::cout << "  " << *it ;
             //        }
             //        std::cout << std::endl ;
 
@@ -562,10 +563,10 @@ namespace marlin{
         }
 
 
-	// if we did have cmd line parameters and have used all of them, we delete the corresponding submap ...
-	if( clp_map != 0 && clp_map->size() == 0 ) {
-	  _cmdlineparams.erase( clp_it ) ;
-	}
+  // if we did have cmd line parameters and have used all of them, we delete the corresponding submap ...
+  if( clp_map != 0 && clp_map->size() == 0 ) {
+    _cmdlineparams.erase( clp_it ) ;
+  }
 
     }
 
@@ -576,9 +577,9 @@ namespace marlin{
 
         //     for( StringParametersMap::iterator iter = _map.begin() ; iter != _map.end() ; iter++){
         //       //     std::cout << " parameter section " << iter->first
-        //       // 	      << std::endl
-        //       // 	      << *iter->second
-        //       // 	      << std::endl ;
+        //       //         << std::endl
+        //       //         << *iter->second
+        //       //         << std::endl ;
         //     }
 
         return _map[ sectionName ] ;
@@ -987,8 +988,8 @@ namespace marlin{
 
                         section->InsertBeforeChild( child , item ) ;
 
-                        // 	      std::cout << " inserting processor tag for group : " << item.Value() << ", "
-                        // 			<< item.Attribute("name") << std::endl ;
+                        //        std::cout << " inserting processor tag for group : " << item.Value() << ", "
+                        //      << item.Attribute("name") << std::endl ;
                     }
 
                     section->RemoveChild( child ) ;

@@ -11,14 +11,9 @@
 #include <marlin/Processor.h>
 #include <marlin/Application.h>
 #include <marlin/GeometryManager.h>
+#include <marlin/BookStoreManager.h>
 #include <marlin/MarlinConfig.h>
 
-// -- MarlinBook includes
-#include "marlin/book/Types.h"
-#include "marlin/book/BookStore.h"
-#include "marlin/book/Flags.h"
-#include "marlin/book/Handle.h"
-#include "marlin/MarlinBookConfig.h"
 
 namespace marlin {
 
@@ -56,34 +51,34 @@ namespace marlin {
         | book::Flags::value(book::Flags::Book::Store)};
 
       /**
-       *  @brief Register new Histogram.
-       *  @param proc the processor instance
-       *  @param path to registered histogram
-       *  @param axes array of axis configuration for the Histogram 
-       *  @throw TODO: ErrorType if an Object at path already exist with other type
+       *  @brief  Book  a histogram 1D, float type
+       *  
+       *  @param  proc       the processor booking the histogram
+       *  @param  path       the histogram entry path
+       *  @param  name       the histogram name
+       *  @param  title      the histogram title
+       *  @param  axisconfig the histogram X axis config
+       *  @param  flags      the book flag policy
        */
-      template<typename HistT>
-      static  book::Handle<book::Entry<HistT>>
-      create(
-        const Processor * const proc,
-        const std::filesystem::path& pathName,
-        const std::string_view& title,
-        const std::array<
-          AxisConfig<typename HistT::Precision_t>,
-          HistT::Dimension>& axes,
-        const book::Flag_t& flags = DefaultConfiguration ) ;
+      [[nodiscard]] static H1FEntry bookHist1F (
+        const Processor *proc, 
+        const std::filesystem::path &path, 
+        const std::string_view &name,
+        const std::string_view &title,
+        const AxisConfigD &axisconfig,
+        const BookFlag &flags  = DefaultConfiguration) ; 
 
       /**
-       *  @brief Get Handle to existing histogram entry.
-       *  Histograms can registered in steering file or with registerHistogram() 
-       *  @param proc the processor instance
-       *  @param path to registered histogram
-       *  @throw TODO: ErrorType if path don't belong to an Object.
+       *  @brief Get handle for booked histogram 1D, float type.
+       *
+       *  @param proc the processor which booked the histogram
+       *  @param path the histogram entry path
+       *  @param name the histogram name
        */
-      template<typename HistT>
-      [[nodiscard]]
-      static book::Handle<book::Entry<HistT>> 
-      get(const Processor * proc, const std::filesystem::path& path) ;
+      [[nodiscard]] static H1FEntry getHist1F (
+        const Processor *proc,
+        const std::filesystem::path &path,
+        const std::string_view &name ) ;
 
 
       /**

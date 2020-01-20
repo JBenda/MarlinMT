@@ -12,9 +12,6 @@
 #include "IMPL/LCEventImpl.h"
 #include "IMPL/LCRunHeaderImpl.h"
 
-// -- book headers
-#include "marlin/book/Hist.h"
-
 using namespace marlin ;
 
 class TestHistogram : public Processor {
@@ -32,13 +29,12 @@ TestHistogram::TestHistogram() :
   Processor("TestHistogram") {}
 
 void TestHistogram::init() {
-  _histogram = ProcessorApi::Book::create<book::types::H1F>(
+  _histogram = ProcessorApi::Book::bookHist1F(
     this,
-    "/someWhere/hit",
+    "/someWhere/",
+    "hit",
     "test histogram",
-    {
       book::types::AxisConfig<double>(3, 0., 3.)
-    }
   );
 }
 

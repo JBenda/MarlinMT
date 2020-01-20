@@ -76,7 +76,7 @@ namespace marlin {
             title,
             ROOT::Experimental::RAxisConfig(
               axis.title(),
-              axis.bins(),
+              details::safe_cast<std::size_t, int>(axis.bins()),
               axis.min(),
               axis.max()))
       {

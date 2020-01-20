@@ -1,9 +1,11 @@
-
+#pragma once
 // Marlin book config
 // WARNING: this header has been generated at configure time via CMake.
 // Modification may be lost ...
 #include <marlin/book/configs/@MARLIN_BOOK_IMPL_HEADER@>
 #include <marlin/book/BookStore.h>
+#include <marlin/book/Handle.h>
+#include <marlin/book/Hist.h>
 
 namespace marlin {
     

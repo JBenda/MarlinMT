@@ -75,6 +75,10 @@ namespace marlin {
 
       const T& merged() const ;
 
+      [[nodiscard]] const EntryKey& key() const {
+        return _entry->key();
+      }
+
     private:
       /// reference to handled Entry.
       std::shared_ptr< const details::Entry > _entry{nullptr} ;
@@ -83,7 +87,7 @@ namespace marlin {
       /// count number of Handle instances.
       std::atomic< std::size_t > _count{0} ;
       /// shared mutex for serialisation when writing 
-      std::shared_mutex _mappingAcces;
+      std::shared_mutex _mappingAcces{};
     } ;
 
     /**
@@ -126,16 +130,29 @@ namespace marlin {
        *  @brief get Entry from key.
        *  @throw BookStoreException key not exist in Store.
        */
-      details::Entry &get( const EntryKey &key ) { return get( key.idx ); }
+      details::Entry &get( const EntryKey &key ) const { return get( key.idx ); }
 
       /**
        *  @brief get Entry from key.
        *  @throw BookStoreException key not exist in Store.
        */
-      details::Entry &get( std::size_t const idx ) {
+      details::Entry &get( std::size_t const idx ) const {
         try {
           return *_entries[idx] ;
         } catch ( const std::out_of_range & ) {
+          MARLIN_BOOK_THROW( "Invalid key." ) ;
+        }
+      }
+
+      /**
+       *  @brief 
+       *  @throw BookStoreException key not exist in Sore
+       */
+      const std::shared_ptr<details::Entry> 
+        &getPtr( std::size_t const idx ) const {
+        try {
+          return _entries[idx] ;
+        } catch ( const std::out_of_range& ) {
           MARLIN_BOOK_THROW( "Invalid key." ) ;
         }
       }
@@ -191,7 +208,7 @@ namespace marlin {
     public:
       explicit BookStore( bool allowMoving = false )
         : _constructThread( std::this_thread::get_id() ), 
-          _allowMoving{allowMoving} {}
+          _allowMoving{allowMoving} { }
 
       /**
        *  @brief book new object.
@@ -414,7 +431,7 @@ namespace marlin {
             std::remove_reference_t<std::remove_cv_t<decltype(*begin)>>>);
       decltype(_entries) storeList{};
       for( Itr itr = begin; itr != end; ++itr) {
-        storeList.push_back(get(itr->idx)); 
+        storeList.push_back(getPtr(itr->idx)); 
       } 
       storeSelection(
         writer,

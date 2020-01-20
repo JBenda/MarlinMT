@@ -80,13 +80,13 @@ marlin_add_test (
   DEPENDS marlinminusx
 )
 
-# marlin_add_processor_test (
-# 	histogram
-# 	STEERING_FILE ${CMAKE_CURRENT_SOURCE_DIR}/steer/histogram.xml
-# 	INPUT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/simjob.slcio
-# 	REGEX_PASS "success"
-# 	MARLIN_DLL Marlin::CorePlugins Marlin::LCIOPlugins 
-# )
+marlin_add_processor_test (
+	histogram
+	STEERING_FILE ${CMAKE_CURRENT_SOURCE_DIR}/steer/histogram.xml
+	INPUT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/simjob.slcio
+	REGEX_PASS "success"
+	MARLIN_DLL Marlin::CorePlugins Marlin::LCIOPlugins 
+)
 
 marlin_add_processor_test (
   eventmodifier

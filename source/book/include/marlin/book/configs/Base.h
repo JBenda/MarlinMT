@@ -309,6 +309,19 @@ namespace marlin {
 
 
     } // end namespace types
+
+    namespace details {
+      template<typename I, typename O>
+      constexpr O safe_cast(const I& input) {
+        if ( 
+            static_cast<O>(input) >= std::numeric_limits<O>::min()
+            && static_cast<O>(input) <= std::numeric_limits<O>::max()) {
+          return static_cast<O>(input);
+        }
+        throw "numeber cast with data lose!";
+      }
+      
+    } // end namespace details
     
     // -- MarlinBook forward declarations
     class BookStore ;

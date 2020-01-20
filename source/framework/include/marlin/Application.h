@@ -8,6 +8,7 @@
 #include <marlin/GeometryManager.h>
 #include <marlin/LoggerManager.h>
 #include <marlin/RandomSeedManager.h>
+#include <marlin/BookStoreManager.h>
 
 namespace marlin {
 
@@ -143,12 +144,22 @@ namespace marlin {
     RandomSeedManager &randomSeedManager() ;
 
     /**
+     *  @brief Get book store manager
+     */
+    BookStoreManager &bookStoreManager() const ;
+
+    /**
      *  @brief  Set the scheduler instance to use in this application.
      *  Must be called before init(argc, argv)
      *
      *  @param  scheduler the sceduler instance to use
      */
     void setScheduler( Scheduler scheduler ) ;
+
+    /**
+     *  @brief get number of concurrency with which the application runs. 
+     */
+    std::size_t getConcurrency() const ; 
 
   protected:
     /**
@@ -188,6 +199,11 @@ namespace marlin {
      */
     void processFinishedEvents( const EventList &events ) const ;
 
+    /**
+     *  @brief  determines concurrency number based on steering file and hardware.
+     */
+    std::size_t readConcurrency() ; 
+
   protected:
     /// The arguments from main function after command line arguments have been removed
     CmdLineArguments           _filteredArguments {} ;
@@ -217,8 +233,13 @@ namespace marlin {
     DataSource                 _dataSource {nullptr} ;
     ///< Initial processor runtime conditions from steering file
     ConditionsMap              _conditions {} ;
+    ///< Managed data object shared between threads.
+    std::unique_ptr<BookStoreManager>
+                              _bookStoreManager {} ;
     ///< Whether the currently pushed event is the first one
     bool                       _isFirstEvent {true} ;
+    ///< number of concurrency with which the application runs.
+    std::size_t                _concurrency {0} ;
   };
 
 } // end namespace marlin

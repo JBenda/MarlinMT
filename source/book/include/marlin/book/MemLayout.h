@@ -89,16 +89,16 @@ namespace marlin {
       SharedMemLayout &operator=( const SharedMemLayout & )     = default ;
       SharedMemLayout( SharedMemLayout && ) noexcept            = default ;
       SharedMemLayout &operator=( SharedMemLayout && ) noexcept = default ;
-      ~SharedMemLayout() final                                  = default ;
+      ~SharedMemLayout() override final                         = default ;
 
     private:
       /// Get Resource for Instance. Lazy operation.
       [[nodiscard]] std::shared_ptr< void >
-      impAt( std::size_t idx ) const final {
+      impAt( std::size_t idx ) const override final {
         return _objects[idx] ;
       }
 
-      [[nodiscard]] std::shared_ptr< void > impMerged() final {
+      [[nodiscard]] std::shared_ptr< void > impMerged() override final {
         _mergedObj
           = std::make_shared< T >( std::make_from_tuple< T >( *_ctor_p ) ) ;
         for ( std::shared_ptr< T > &pObj : _objects ) {
@@ -131,16 +131,16 @@ namespace marlin {
       SingleMemLayout &operator=( const SingleMemLayout & )     = default ;
       SingleMemLayout( SingleMemLayout && ) noexcept            = default ;
       SingleMemLayout &operator=( SingleMemLayout && ) noexcept = default ;
-      ~SingleMemLayout() final                                  = default ;
+      ~SingleMemLayout() override final                         = default ;
 
     private:
       [[nodiscard]] std::shared_ptr< void >
-      impAt( std::size_t /*idx*/ ) const final {
+      impAt( std::size_t /*idx*/ ) const override final {
         return _object ;
       }
 
       /// @note cheap merge
-      [[nodiscard]] std::shared_ptr< void > impMerged() final {
+      [[nodiscard]] std::shared_ptr< void > impMerged() override final {
         return _object ;
       }
 

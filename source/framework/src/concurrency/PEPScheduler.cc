@@ -126,30 +126,9 @@ namespace marlin {
     //--------------------------------------------------------------------------
 
     void PEPScheduler::preConfigure( Application *app ) {
-      auto globals = app->globalParameters() ;
-      auto ccyStr = globals->getValue<std::string>( "Concurrency", "auto" ) ;
-      // The concurrency read from the steering file
-      std::size_t ccy = (ccyStr == "auto" ?
-        std::thread::hardware_concurrency() :
-        StringUtil::stringToType<std::size_t>(ccyStr) ) ;
-      _logger->log<DEBUG5>() << "-- Application concurrency from steering file " << ccy << std::endl ;
-      _logger->log<DEBUG5>() << "-- Hardware concurrency: " << std::thread::hardware_concurrency() << std::endl ;
-      if ( ccy <= 0 ) {
-        _logger->log<ERROR>() << "-- Couldn't determine number of threads to use (computed=" << ccy << ")" << std::endl ;
-        throw Exception( "Undefined concurrency level" ) ;
-      }
-      _logger->log<MESSAGE>() << "-- Application concurrency set to " << ccy << std::endl ;
-      if ( ccy > std::thread::hardware_concurrency() ) {
-        _logger->log<WARNING>() << "-- Application concurrency higher than the number of supported threads on your machine --" << std::endl ;
-        _logger->log<WARNING>() << "---- application: " << ccy << std::endl ;
-        _logger->log<WARNING>() << "---- hardware:    " << std::thread::hardware_concurrency() << std::endl ;
-      }
-      if ( ccy == 1 ) {
-        _logger->log<WARNING>() << "-- The program will run on a single thread --" << std::endl ;
-        // TODO should we throw here ??
-      }
       // create processor super sequence
-      _superSequence = std::make_shared<SuperSequence>(ccy) ;
+      _superSequence = std::make_shared<SuperSequence>(
+          app->getConcurrency()) ;
     }
 
     //--------------------------------------------------------------------------
