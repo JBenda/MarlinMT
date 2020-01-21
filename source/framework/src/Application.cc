@@ -52,6 +52,8 @@ namespace marlin {
     }
     // initialize geometry
     _geometryMgr.init( this ) ;
+    // set concurrency
+    _concurrency = readConcurrency();
     // initialize scheduler
     _scheduler->init( this ) ;
     // initialize data source

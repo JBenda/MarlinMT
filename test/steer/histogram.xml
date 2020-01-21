@@ -6,7 +6,8 @@
   </execute>
 
   <global>
-    <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARING0-4,ERROR0-4,SILENT"> MESSAGE3 DEBUG </parameter>
+    <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARING0-4,ERROR0-4,SILENT"> DEBUG5 </parameter>
+    <parameter name="Concurrency">3</parameter>
   </global>
 
   <datasource type="LCIO">

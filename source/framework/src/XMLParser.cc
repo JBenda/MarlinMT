@@ -166,7 +166,7 @@ namespace marlin{
               }
             }
             catch(...){
-              globalParameters->add( "Concurrency", "0" );
+              globalParameters->add( "Concurrency", "auto" );
             }
 
             //       std::cout <<  " execute after group replacement : " << *section << std::
