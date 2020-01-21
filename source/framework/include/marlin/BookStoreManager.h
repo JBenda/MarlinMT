@@ -73,7 +73,7 @@ namespace marlin {
      */
     const book::EntryKey* getKey(
         const std::filesystem::path &path,
-        const std::string_view &name) ;
+        const std::string_view &name) const ;
 
     /**
      *  @brief access object managed by this store. For internal usage.
@@ -82,7 +82,7 @@ namespace marlin {
      */
     template<typename T>
     [[nodiscard]] std::optional<book::Handle<book::Entry<T>>> getObject( 
-        const book::EntryKey *key) ;
+        const book::EntryKey *key) const ;
 
     
   private:

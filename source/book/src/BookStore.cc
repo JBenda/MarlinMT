@@ -54,7 +54,7 @@ namespace marlin {
 
     //--------------------------------------------------------------------------
 
-    Selection BookStore::find( const Condition &cond ) {
+    Selection BookStore::find( const Condition &cond ) const {
       return Selection::find( _entries.cbegin(), _entries.cend(), cond ) ;
     }
 

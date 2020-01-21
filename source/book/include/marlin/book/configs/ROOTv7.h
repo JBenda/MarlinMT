@@ -93,12 +93,12 @@ namespace marlin {
             title,
             ROOT::Experimental::RAxisConfig(
               axisA.title(),
-              axisA.bins(),
+              details::safe_cast<std::size_t, int>(axisA.bins()),
               axisA.min(),
               axisA.max()),
             ROOT::Experimental::RAxisConfig(
               axisB.title(),
-              axisB.bins(),
+              details::safe_cast<std::size_t, int>(axisB.bins()),
               axisB.min(),
               axisB.max()
             ))
@@ -117,17 +117,17 @@ namespace marlin {
             title,
             ROOT::Experimental::RAxisConfig(
               axisA.title(),
-              axisA.bins(),
+              details::safe_cast<std::size_t, int>(axisA.bins()),
               axisA.min(),
               axisA.max()),
             ROOT::Experimental::RAxisConfig(
               axisB.title(),
-              axisB.bins(),
+              details::safe_cast<std::size_t, int>(axisB.bins()),
               axisB.min(),
               axisB.max()),
             ROOT::Experimental::RAxisConfig(
               axisC.title(),
-              axisC.bins(),
+              details::safe_cast<std::size_t, int>(axisC.bins()),
               axisC.min(),
               axisC.max())
             )

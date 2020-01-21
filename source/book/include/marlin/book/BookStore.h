@@ -232,13 +232,13 @@ namespace marlin {
        *  @brief get access to entry from key. 
        */
       template<typename T>
-      Handle<Entry<T>> entry(const EntryKey &key ) ;
+      Handle<Entry<T>> entry(const EntryKey &key ) const ;
 
       /**
        *  @brief select every Entry which matches the condition.
        *  @return Selection with matches Entries.
        */
-      Selection find( const Condition &cond ) ;
+      Selection find( const Condition &cond ) const ;
 
       /**
        *  @brief removes an Entry from BookStore.
@@ -453,7 +453,7 @@ namespace marlin {
     //--------------------------------------------------------------------------
     
     template<typename T>
-    Handle<Entry<T>> BookStore::entry(const EntryKey &key ) {
+    Handle<Entry<T>> BookStore::entry(const EntryKey &key ) const {
       return Handle<Entry<T>>(getPtr(key))  ;
     }
 

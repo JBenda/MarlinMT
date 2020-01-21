@@ -11,9 +11,9 @@ namespace marlin {
 
 #define INSTANCIATIONS_HIST(type) \
   template std::optional<book::Handle<book::Entry<type>>> BookStoreManager::getObject<type>(\
-    const book::EntryKey*) ;\
+    const book::EntryKey*) const ;\
                             \
-  template book::Handle<book::Entry<Hist1F>> BookStoreManager::bookHist<type>(\
+  template book::Handle<book::Entry<type>> BookStoreManager::bookHist<type>(\
       const std::filesystem::path&,\
       const std::string_view&,\
       const std::string_view&,\
@@ -23,6 +23,14 @@ namespace marlin {
       const BookFlag&) 
 
   INSTANCIATIONS_HIST(Hist1F);
+  INSTANCIATIONS_HIST(Hist1D);
+  INSTANCIATIONS_HIST(Hist1I);
+  INSTANCIATIONS_HIST(Hist2F);
+  INSTANCIATIONS_HIST(Hist2D);
+  INSTANCIATIONS_HIST(Hist2I);
+  INSTANCIATIONS_HIST(Hist3F);
+  INSTANCIATIONS_HIST(Hist3D);
+  INSTANCIATIONS_HIST(Hist3I);
 
   //--------------------------------------------------------------------------
     
@@ -86,7 +94,7 @@ namespace marlin {
 
     book::EntryData<HistT> data(title, axesconfig);
 
-    H1FEntry entry;
+    book::Handle<book::Entry<HistT>> entry;
 
     if( flag.contains(book::Flags::Book::MultiCopy)) {
       entry =  _bookStore.book( path, name, data.multiCopy(_application->getConcurrency()) ) ;
@@ -107,7 +115,7 @@ namespace marlin {
   
   template<typename T>
   std::optional<book::Handle<book::Entry<T>>> BookStoreManager::getObject(
-      const book::EntryKey *key) {
+      const book::EntryKey *key) const {
       if (key) {
         if (key->type == std::type_index(typeid(T))) {
           return std::optional(_bookStore.entry<T>(*key));
@@ -134,7 +142,7 @@ namespace marlin {
   
   const book::EntryKey* BookStoreManager::getKey(
     const std::filesystem::path &path,
-    const std::string_view &name)
+    const std::string_view &name) const
   {
     book::Selection res = _bookStore.find(
       book::ConditionBuilder()

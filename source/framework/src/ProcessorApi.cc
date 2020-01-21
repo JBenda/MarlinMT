@@ -26,6 +26,20 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
+  template<typename HistT>
+  book::Handle<book::Entry<HistT>> getObjectOrThrow(
+    const BookStoreManager &storeManager,
+    const std::filesystem::path &path,
+    const std::string_view &name) {
+    if(auto res = storeManager.getObject<HistT>(
+        storeManager.getKey(path, name)))
+    {
+      return std::move(res.value());
+    }
+    MARLIN_THROW(" try to access not existing object!");
+  }
+
+  //--------------------------------------------------------------------------
   
   H1FEntry ProcessorApi::Book::bookHist1F (
     const Processor *proc, 
@@ -48,12 +62,38 @@ namespace marlin {
     const Processor *proc,
     const std::filesystem::path &path,
     const std::string_view &name ) {
-    BookStoreManager& store = proc->app().bookStoreManager();
-    if (auto res = store.getObject<Hist1F>(
-        store.getKey(constructPath(proc, path), name))) {
-      return std::move(res.value());
-    }
-    MARLIN_THROW(" try to access not existing object!");
+    return getObjectOrThrow<Hist1F>( 
+        proc->app().bookStoreManager(), 
+        constructPath(proc, path), name);
+  }
+
+  //--------------------------------------------------------------------------
+
+  H2FEntry ProcessorApi::Book::bookHist2F (
+    const Processor *proc, 
+    const std::filesystem::path &path, 
+    const std::string_view &name,
+    const std::string_view &title,
+    const AxisConfigD &axisconfigX,
+    const AxisConfigD &axisconfigY,
+    const BookFlag &flags) {
+    return proc->app().bookStoreManager().bookHist<Hist2F>(
+      constructPath(proc, path),
+      name,
+      title,
+      {&axisconfigX, &axisconfigY},
+      flags);
+  } 
+
+  //--------------------------------------------------------------------------
+
+  H2FEntry ProcessorApi::Book::getHist2F (
+    const Processor *proc,
+    const std::filesystem::path &path,
+    const std::string_view &name ) {
+    return getObjectOrThrow<Hist2F>(
+        proc->app().bookStoreManager(),
+        constructPath(proc, path), name);
   }
 
   //--------------------------------------------------------------------------

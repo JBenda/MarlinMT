@@ -384,7 +384,7 @@ namespace marlin {
                                     const std::string_view &,
                                     const typename types::HistT<Config>::AxisConfig_t &,
                                     const typename types::HistT<Config>::AxisConfig_t & >(
-        args..., _data.title, *_data.axis(0), *_data.axis(1) ) ;
+        args..., _data.title(), *_data.axis(0), *_data.axis(1) ) ;
     }
 
     //--------------------------------------------------------------------------

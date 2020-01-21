@@ -69,6 +69,26 @@ namespace marlin {
         const BookFlag &flags  = DefaultConfiguration) ; 
 
       /**
+       *  @brief  Book  a histogram 2D, float type
+       *  
+       *  @param  proc        the processor booking the histogram
+       *  @param  path        the histogram entry path
+       *  @param  name        the histogram name
+       *  @param  title       the histogram title
+       *  @param  axisconfigX the histogram X axis configuration
+       *  @param  axisconfigY the histogram Y axis configuration
+       *  @param  flags       the book flag policy
+       */
+      [[nodiscard]] static H2FEntry bookHist2F (
+        const Processor *proc, 
+        const std::filesystem::path &path, 
+        const std::string_view &name,
+        const std::string_view &title,
+        const AxisConfigD &axisconfigX,
+        const AxisConfigD &axisconfigY,
+        const BookFlag &flags  = DefaultConfiguration) ; 
+
+      /**
        *  @brief Get handle for booked histogram 1D, float type.
        *
        *  @param proc the processor which booked the histogram
@@ -76,6 +96,18 @@ namespace marlin {
        *  @param name the histogram name
        */
       [[nodiscard]] static H1FEntry getHist1F (
+        const Processor *proc,
+        const std::filesystem::path &path,
+        const std::string_view &name ) ;
+
+      /**
+       *  @brief Get handle for booked histogram 2D, float type.
+       *
+       *  @param proc the processor which booked the histogram
+       *  @param path the histogram entry path
+       *  @param name the histogram name
+       */
+      [[nodiscard]] static H2FEntry getHist2F (
         const Processor *proc,
         const std::filesystem::path &path,
         const std::string_view &name ) ;
