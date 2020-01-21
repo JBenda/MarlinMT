@@ -12,7 +12,7 @@ namespace marlin {
       : _entry{entry}{}
 
     bool WeakEntry::valid() const {
-      return !_entry.expired() && _entry.lock()->valid() ;
+      return !_entry.expired() && _entry.lock()->valid(); 
     }
 
     const EntryKey& WeakEntry::key() const {

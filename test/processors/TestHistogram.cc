@@ -34,7 +34,7 @@ void TestHistogram::init() {
     "/someWhere/",
     "hit",
     "test histogram",
-      book::types::AxisConfig<double>(3, 0., 3.)
+      AxisConfigD(3, -3., 3.)
   );
 }
 
@@ -60,7 +60,7 @@ void TestHistogram::processEvent(EventStore * evt) {
 }
 
 void TestHistogram::end() {
-  streamlog_out(ERROR) << "success\n";  
+  streamlog_out(MESSAGE) << "success\n";  
 }
 
 MARLIN_DECLARE_PROCESSOR( TestHistogram )

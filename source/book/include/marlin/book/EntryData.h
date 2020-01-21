@@ -86,3 +86,16 @@ namespace marlin {
 
   } // end namespace book
 } // end namespace marlin
+
+namespace std {
+  template<>
+  struct less<marlin::book::EntryKey> {
+    bool operator()(
+      const marlin::book::EntryKey& lh,
+      const marlin::book::EntryKey& rh) const 
+    {
+      return lh.idx < rh.idx;
+    }
+  };
+} // end namespace std
+

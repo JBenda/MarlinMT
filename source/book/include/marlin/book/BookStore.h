@@ -127,31 +127,13 @@ namespace marlin {
       addEntry( const std::shared_ptr< EntryBase > &entry, EntryKey key ) ;
 
       /**
-       *  @brief get Entry from key.
-       *  @throw BookStoreException key not exist in Store.
-       */
-      details::Entry &get( const EntryKey &key ) const { return get( key.idx ); }
-
-      /**
-       *  @brief get Entry from key.
-       *  @throw BookStoreException key not exist in Store.
-       */
-      details::Entry &get( std::size_t const idx ) const {
-        try {
-          return *_entries[idx] ;
-        } catch ( const std::out_of_range & ) {
-          MARLIN_BOOK_THROW( "Invalid key." ) ;
-        }
-      }
-
-      /**
        *  @brief 
        *  @throw BookStoreException key not exist in Sore
        */
       const std::shared_ptr<details::Entry> 
-        &getPtr( std::size_t const idx ) const {
+        &getPtr( const EntryKey &key ) const {
         try {
-          return _entries[idx] ;
+          return _entries[key.idx] ;
         } catch ( const std::out_of_range& ) {
           MARLIN_BOOK_THROW( "Invalid key." ) ;
         }
@@ -204,8 +186,27 @@ namespace marlin {
        */
       static std::filesystem::path normalizeDirPath(const std::filesystem::path& path);
 
+      /**
+       *  @brief get Entry from key.
+       *  @throw BookStoreException key not exist in Store.
+       */
+      details::Entry &get( std::size_t const idx ) const {
+        try {
+          return *_entries[idx] ;
+        } catch ( const std::out_of_range & ) {
+          MARLIN_BOOK_THROW( "Invalid key." ) ;
+        }
+      }
+
+      /**
+       *  @brief get Entry from key.
+       *  @throw BookStoreException key not exist in Store.
+       */
+      details::Entry &get( const EntryKey &key ) const { return get( key.idx ); }
+
 
     public:
+
       explicit BookStore( bool allowMoving = false )
         : _constructThread( std::this_thread::get_id() ), 
           _allowMoving{allowMoving} { }
@@ -225,6 +226,13 @@ namespace marlin {
       book( const std::filesystem::path& path,
             const std::string_view&      name,
             const T                     &data ) ;
+
+
+      /**
+       *  @brief get access to entry from key. 
+       */
+      template<typename T>
+      Handle<Entry<T>> entry(const EntryKey &key ) ;
 
       /**
        *  @brief select every Entry which matches the condition.
@@ -428,10 +436,10 @@ namespace marlin {
     void BookStore::storeList( StoreWriter& writer, Itr begin, Itr end) const {
       static_assert(std::is_same_v<
             EntryKey,
-            std::remove_reference_t<std::remove_cv_t<decltype(*begin)>>>);
+            std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>>);
       decltype(_entries) storeList{};
       for( Itr itr = begin; itr != end; ++itr) {
-        storeList.push_back(getPtr(itr->idx)); 
+        storeList.push_back(getPtr(*itr)); 
       } 
       storeSelection(
         writer,
@@ -440,6 +448,13 @@ namespace marlin {
           storeList.end(),
           ConditionBuilder())
       );
+    }
+
+    //--------------------------------------------------------------------------
+    
+    template<typename T>
+    Handle<Entry<T>> BookStore::entry(const EntryKey &key ) {
+      return Handle<Entry<T>>(getPtr(key))  ;
     }
 
   } // end namespace book

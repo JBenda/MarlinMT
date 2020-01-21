@@ -4,6 +4,9 @@
 #include <marlin/MarlinBookConfig.h>
 #include <marlin/Logging.h>
 
+// -- std includes
+#include <set>
+
 namespace marlin {
   
   // forward declaration
@@ -18,12 +21,12 @@ namespace marlin {
     using Logger = Logging::Logger ;
     
   public:
-    BookStoreManager() { std::cout << "BSM constructed:!";} ;
+    BookStoreManager() = default;
     BookStoreManager( const BookStoreManager & ) = delete ;
     BookStoreManager &operator=( const BookStoreManager & ) = delete ;
     BookStoreManager( BookStoreManager && ) = delete ;
     BookStoreManager &operator=( BookStoreManager && ) = delete ;
-    ~BookStoreManager() = default ;
+    ~BookStoreManager() ;
     
     /// Whether the book store has been initialized
     [[nodiscard]] bool isInitialized() const ;
@@ -42,7 +45,6 @@ namespace marlin {
      *  @param  flags      the book flag policy
      */
     [[nodiscard]] H1FEntry bookHist1F (
-      const Processor *proc, 
       const std::filesystem::path &path, 
       const std::string_view &name,
       const std::string_view &title,
@@ -50,35 +52,48 @@ namespace marlin {
       const BookFlag &flags ) ;
 
     /**
-     *  @brief Get handle for booked histogram 1D, float type.
-     *
-     *  @param proc the processor which booked the histogram
-     *  @param path the histogram entry path
-     *  @param name the histogram name
+     *  @brief add entry key to write list.
      */
-    [[nodiscard]] H1FEntry getHist1F (
-      const Processor *proc,
-      const std::filesystem::path &path,
-      const std::string_view &name ) ;
+    void addToWrite(const book::EntryKey& key) ;
+
+    /**
+     *  @brief remove entry key from write list. 
+     */
+    void removeFromWrite(const book::EntryKey& key) ;
+
+    /**
+     *  @brief receive key from Entry with given path and name.
+     *  @param path absolute path of Object
+     *  @param name of Object
+     *  @return nullptr if path not exist or is not unique
+     *  @return EntryKey address else
+     */
+    const book::EntryKey* getKey(
+        const std::filesystem::path &path,
+        const std::string_view &name) ;
+
+    /**
+     *  @brief access object managed by this store. For internal usage.
+     *  @param key key for Entry to Object
+     *  @return optional which contains on success a Handle for the Entry for the Object.
+     */
+    template<typename T>
+    [[nodiscard]] std::optional<book::Handle<book::Entry<T>>> getObject( 
+        const book::EntryKey *key) ;
 
     
   private:
-    std::filesystem::path constructPath(
-        const Processor *proc,
-        const std::filesystem::path &path ) ;
-
-    template<typename T>
-    [[nodiscard]] std::optional<book::Handle<book::Entry<T>>> getObject(
-      const Processor *proc,
-      const std::filesystem::path &path,
-      const std::string_view &name ) ;
 
     /// The application in which the geometry manager has been initialized
     const Application                   *_application {nullptr} ;
     /// The book store
     book::BookStore                      _bookStore {true} ;
+    /// list of entry keys for Entries which should be stored at end of lifetime
+    std::set<book::EntryKey>             _entrysToWrite {} ;
     /// The logger instance
     Logger                               _logger {nullptr} ;
+    /// path to file to store objects
+    std::filesystem::path                _storeFile{""};
   };
 
   

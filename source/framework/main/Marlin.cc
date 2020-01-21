@@ -27,7 +27,6 @@ int main( int argc, char **argv ) {
   try {
     application = std::make_shared<Application>() ;    
     application->setScheduler( std::make_shared<SimpleScheduler>() ) ;
-    std::cout << "init application: \n";
     application->init( argc, argv ) ;
     application->run() ;
   }

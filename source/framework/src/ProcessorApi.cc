@@ -12,6 +12,21 @@
 namespace marlin {
 
   
+  /**
+   *  @brief construct absolute path from relative path and processor. 
+   *  @param proc Processor who owned the path
+   *  @param path absolute path in processor
+   */
+  std::filesystem::path constructPath(
+    const Processor *proc,
+    const std::filesystem::path &path ) {
+    return (std::filesystem::path("/")
+      += proc->name()) += path;
+  }
+
+  //--------------------------------------------------------------------------
+
+  
   H1FEntry ProcessorApi::Book::bookHist1F (
     const Processor *proc, 
     const std::filesystem::path &path, 
@@ -20,8 +35,7 @@ namespace marlin {
     const AxisConfigD &axisconfig,
     const BookFlag &flags )  {
     return proc->app().bookStoreManager().bookHist1F(
-      proc,
-      path,
+      constructPath(proc, path),
       name,
       title,
       axisconfig,
@@ -34,8 +48,30 @@ namespace marlin {
     const Processor *proc,
     const std::filesystem::path &path,
     const std::string_view &name ) {
-    return proc->app().bookStoreManager().getHist1F(
-        proc, path, name);
+    BookStoreManager& store = proc->app().bookStoreManager();
+    if (auto res = store.getObject<Hist1F>(
+        store.getKey(constructPath(proc, path), name))) {
+      return std::move(res.value());
+    }
+    MARLIN_THROW(" try to access not existing object!");
+  }
+
+  //--------------------------------------------------------------------------
+  
+  void ProcessorApi::Book::write( 
+      const Processor *proc,
+      const book::EntryKey &key) 
+  {
+    proc->app().bookStoreManager().addToWrite(key);
+  }
+
+  //--------------------------------------------------------------------------
+  
+  void ProcessorApi::Book::dontWrite(
+      const Processor *proc,
+      const book::EntryKey &key)
+  {
+    proc->app().bookStoreManager().removeFromWrite(key);
   }
 
   //--------------------------------------------------------------------------

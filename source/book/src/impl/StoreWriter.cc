@@ -50,18 +50,24 @@ namespace marlin {
     ) {
       DirectoryMap dirs{};
 
-      TFile* root = TFile::Open(_path.string().c_str(), "new");
-
+      TFile root(_path.string().c_str(), "UPDATE");
+      if(root.IsZombie()) {
+        MARLIN_BOOK_THROW(std::string("failed to create file: ") + _path.string());
+      }
       for(const WeakEntry& h : selection) {
         if(!h.valid()) { continue; }
-
         const EntryKey& key = h.key();
         const std::type_index type = key.type;
-
         std::string path = std::filesystem::relative(key.path, "/").remove_filename().string();
         path.pop_back();
-        root->mkdir(path.c_str());
-        TDirectory *file = root->GetDirectory(path.c_str());
+
+        const char* c_path = path.c_str();
+        TDirectory *file = root.GetDirectory(c_path);
+        if(file == nullptr) {
+          root.mkdir(c_path);
+          file = root.GetDirectory(c_path);
+        }
+
         if(file == nullptr) {
           MARLIN_BOOK_THROW( std::string("failed create: ") + path + '\n');
         }
@@ -87,7 +93,7 @@ namespace marlin {
           MARLIN_BOOK_THROW( "can't store object, no known operation" );
         }
       }
-      root->Close();
+      root.Close();
         
     }
 

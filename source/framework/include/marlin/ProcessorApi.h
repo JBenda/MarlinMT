@@ -85,11 +85,41 @@ namespace marlin {
        *  @brief register Object to write it at end of lifetime. 
        *  The same effect can archived with passing the Store flag by registration.
        *  @param proc the processor instance
-       *  @param path to registered histogram
+       *  @param path to registered object 
+       *  @param name of object 
        */
-      void write(const Processor * proc, const std::filesystem::path& path) ;
-      void dontWrite(const Processor * proc, const std::filesystem::path& path) ;
+      void write(
+          const Processor * proc, 
+          const std::filesystem::path &path,
+          const std::string_view &name) ;
 
+      /**
+       *  @brief cancels writing of Object at end of lifetime.
+       *  @param proc the processor instance
+       *  @param path to register object
+       *  @param name of object
+       */
+      void dontWrite(
+          const Processor * proc, 
+          const std::filesystem::path &path,
+          const std::string_view &name) ;
+
+      /**
+       *  @brief register Object to write at end of lifetime.
+       *  The same effect can archived with passing the Store flag by registration
+       *  @param key of Entry to Object which should be stored.
+       */
+      void write(
+          const Processor *proc,
+          const book::EntryKey &key) ;
+
+      /**
+       *  @brief cancels writing of Object at end of lifetime.
+       *  @param key of Entry to Object which should be stored.
+       */
+      void dontWrite(
+          const Processor *proc,
+          const book::EntryKey &key) ;
     };
 
     /**
