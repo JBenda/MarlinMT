@@ -9,6 +9,24 @@
 
 namespace marlin {
 
+#define INSTANCIATIONS_HIST(type) \
+  template std::optional<book::Handle<book::Entry<type>>> BookStoreManager::getObject<type>(\
+    const book::EntryKey*) ;\
+                            \
+  template book::Handle<book::Entry<Hist1F>> BookStoreManager::bookHist<type>(\
+      const std::filesystem::path&,\
+      const std::string_view&,\
+      const std::string_view&,\
+      const std::array<\
+        const AxisConfig<typename type::Precision_t>*,\
+        type::Dimension>&,\
+      const BookFlag&) 
+
+  INSTANCIATIONS_HIST(Hist1F);
+
+  //--------------------------------------------------------------------------
+    
+  
   BookStoreManager::~BookStoreManager() {
     book::StoreWriter writer ( _storeFile ) ;
     _bookStore.storeList(
@@ -38,21 +56,6 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  template std::optional<H1FEntry> BookStoreManager::getObject<Hist1F>(
-    const book::EntryKey*) ;
-
-  template book::Handle<book::Entry<Hist1F>> BookStoreManager::bookHist(
-      const std::filesystem::path&,
-      const std::string_view&,
-      const std::string_view&,
-      const std::array<
-        const AxisConfig<typename Hist1F::Precision_t>*,
-        Hist1F::Dimension>&,
-      const BookFlag&) ;
-
-  //--------------------------------------------------------------------------
-    
-  
   template<typename HistT>
   book::Handle<book::Entry<HistT>> BookStoreManager::bookHist (
     const std::filesystem::path &path,
