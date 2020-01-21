@@ -84,8 +84,8 @@ namespace marlin {
        *  @param axes configurations for [1|2|3] ax[i|e]s 
        */
       EntryData( const std::string_view& title,
-                 const std::array<types::AxisConfig<
-                  typename Config::Precision_t>
+                 const std::array<const types::AxisConfig<
+                  typename Config::Precision_t>*
                   , Config::Dimension>& axes) ;
 
     } ;

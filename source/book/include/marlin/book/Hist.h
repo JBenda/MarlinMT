@@ -125,10 +125,11 @@ namespace marlin {
     EntryData< types::HistT<Config>, 0 >::EntryData(
         const std::string_view& title,
         const std::array<
-          types::AxisConfig<typename Config::Precision_t>,
-          Config::Dimension>& axes) {
+          const types::AxisConfig<typename Config::Precision_t>*,
+          Config::Dimension>& axes)
+      : EntryDataBase<types::HistT<Config>>(title){
       for (int i = 0; i < D; ++i) {
-        this->axis(i) = std::make_unique<typename Type::AxisConfig_t>(axes[i]);
+        this->axis(i) = std::make_unique<typename Type::AxisConfig_t>(*(axes[i]));
       }
     }
 

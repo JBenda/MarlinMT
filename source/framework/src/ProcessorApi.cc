@@ -34,11 +34,11 @@ namespace marlin {
     const std::string_view &title,
     const AxisConfigD &axisconfig,
     const BookFlag &flags )  {
-    return proc->app().bookStoreManager().bookHist1F(
+    return proc->app().bookStoreManager().bookHist<Hist1F>(
       constructPath(proc, path),
       name,
       title,
-      axisconfig,
+      {&axisconfig},
       flags);
   } 
 

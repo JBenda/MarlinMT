@@ -44,11 +44,14 @@ namespace marlin {
      *  @param  axisconfig the histogram X axis config
      *  @param  flags      the book flag policy
      */
-    [[nodiscard]] H1FEntry bookHist1F (
+    template<typename HistT>
+    [[nodiscard]] book::Handle<book::Entry<HistT>> bookHist (
       const std::filesystem::path &path, 
       const std::string_view &name,
       const std::string_view &title,
-      const AxisConfigD &axisconfig,
+      const std::array<
+        const AxisConfig<typename HistT::Precision_t>*,
+        HistT::Dimension> &axesconfig,
       const BookFlag &flags ) ;
 
     /**

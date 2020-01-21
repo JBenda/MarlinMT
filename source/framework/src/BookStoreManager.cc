@@ -40,14 +40,30 @@ namespace marlin {
 
   template std::optional<H1FEntry> BookStoreManager::getObject<Hist1F>(
     const book::EntryKey*) ;
+
+  template book::Handle<book::Entry<Hist1F>> BookStoreManager::bookHist(
+      const std::filesystem::path&,
+      const std::string_view&,
+      const std::string_view&,
+      const std::array<
+        const AxisConfig<typename Hist1F::Precision_t>*,
+        Hist1F::Dimension>&,
+      const BookFlag&) ;
+
+  //--------------------------------------------------------------------------
+    
   
-  
-  H1FEntry BookStoreManager::bookHist1F (
+  template<typename HistT>
+  book::Handle<book::Entry<HistT>> BookStoreManager::bookHist (
     const std::filesystem::path &path,
     const std::string_view &name,
     const std::string_view &title,
-    const AxisConfigD &axisconfig,
+    const std::array<
+      const AxisConfig<typename HistT::Precision_t>*,
+      HistT::Dimension> &axesconfig,
     const BookFlag &flag) {
+
+    using Entry_t = book::Handle<book::Entry<HistT>>;
 
     bool store = flag.contains(book::Flags::Book::Store);
 
@@ -55,7 +71,7 @@ namespace marlin {
       (   book::Flags::Book::MultiCopy 
         | book::Flags::Book::MultiShared 
         | book::Flags::Book::Single) ;
-    std::optional<H1FEntry> res = getObject<Hist1F>(getKey(path, name)) ;
+    std::optional<Entry_t> res = getObject<HistT>(getKey(path, name)) ;
     if ( res ) {
       const book::EntryKey& key = res.value().key();
       if (   key.flags != flagsToPass
@@ -65,7 +81,7 @@ namespace marlin {
       return std::move(res.value());
     }
 
-    book::EntryData<Hist1F> data(title, axisconfig);
+    book::EntryData<HistT> data(title, axesconfig);
 
     H1FEntry entry;
 
