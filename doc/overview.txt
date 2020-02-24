@@ -17,7 +17,7 @@ callbacks that the user can implement in their subclasses. A steering file mecha
 allows to activate the needed processors. These are then called for every event using 
 the LCEvent as container for input and output data in terms of LCCollections:
 
-<img src="marlin_overview.gif" alt="marlin schema">
+<img src="marlin_overview.svg" alt="marlin schema">
 
 
 <h2>Installation</h2>

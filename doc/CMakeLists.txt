@@ -32,7 +32,7 @@ if( MARLIN_DOXYGEN )
   add_custom_command(
       OUTPUT  "${DOX_OUTPUT_DIRECTORY}/html/index.html" #"${DOC_BIN_DIR}/latex/index.tex"
       COMMAND ${DOXYGEN_EXECUTABLE}
-      COMMAND cp ${PROJECT_SOURCE_DIR}/doc/marlin_overview.gif ${PROJECT_SOURCE_DIR}/doc/ReleaseNotes.md ${DOX_OUTPUT_DIRECTORY}/html
+      COMMAND cp ${PROJECT_SOURCE_DIR}/doc/marlin_overview.svg ${PROJECT_SOURCE_DIR}/doc/ReleaseNotes.md ${DOX_OUTPUT_DIRECTORY}/html
       WORKING_DIRECTORY ${DOX_DOXYFILE_DIR}
       COMMENT "Building Doxygen documentation..."
       DEPENDS ${DOX_DOXYFILE} CMakeLists.txt ${PROJECT_SOURCE_DIR}/doc/overview.txt ${DOX_INPUT_FILE_LIST}
@@ -59,7 +59,7 @@ if( MARLIN_MKDOCS )
   add_custom_command(
       OUTPUT  "${MKDOCS_SITE_DIR}/index.html"
       COMMAND ${MKDOCS_EXECUTABLE} build -c -f ${MKDOCS_CONFIG_FILE} -d ${MKDOCS_SITE_DIR}
-      COMMAND cp ${PROJECT_SOURCE_DIR}/doc/marlin_overview.gif ${PROJECT_SOURCE_DIR}/doc/ReleaseNotes.md ${MKDOCS_SITE_DIR}/doxygen
+      COMMAND cp ${PROJECT_SOURCE_DIR}/doc/marlin_overview.svg ${PROJECT_SOURCE_DIR}/doc/ReleaseNotes.md ${MKDOCS_SITE_DIR}/doxygen
       COMMENT "Building Mkdocs documentation..."
       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
       DEPENDS ${MKDOCS_CONFIG_FILE} CMakeLists.txt ${MKDOCS_SOURCES}
