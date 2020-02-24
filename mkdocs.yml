@@ -10,6 +10,7 @@ nav:
       - Installation: 'user-manual/installation.md'
       - Getting started: 'user-manual/getting-started.md'
       - Compiling your project with CMake: 'user-manual/cmake.md'
+      - Use Histograms: 'user-manual/bookstore.md'
       - Geometry: 'user-manual/geometry.md'
       - Data source: 'user-manual/data-source.md'
       - XML parser: 'user-manual/xml-parser.md'
