@@ -10,13 +10,13 @@ See [process diagram](/diagrams/BookStore-Schema.html) for further information.
 class MyProcessor : public Processor {
 	// ...
 private:
-	Hist1F _hist; // 1D histogram with float weights
+	H1FEntry _hist; // 1D histogram with float weights
 };
 
 void MyProcessor::init() {
 	_hist = ProcessorApi::Book::bookH1F(
 		this,
-		"/path/in/reslult/file/",
+		"/path/in/result/file/",
 		"name",
 		"the histogram title",
 		{"axis title", nBins, min, max} // AxisConfiguration
@@ -24,7 +24,7 @@ void MyProcessor::init() {
 }
 
 void MyProcessor::processEvent(EventStore* event)
-	HandleH1F histHandle = _hist.handle();
+	H1FHandle histHandle = _hist.handle();
 	for(/*...*/) {
 		histHandle.fill(
 			{x}, // point type: e.g.  '{x,y}' for 2D, etc.
@@ -57,7 +57,7 @@ void MyProcessor::init() {
 
 void MyProcessor::processEvent(EventStore* event)
 
-	std::array<HandleH1F, _hist1fs.size()> histHandles;
+	std::array<H1FHandle, _hist1fs.size()> histHandles;
 	std::transform(_hist1fs.begin(), _hist1fs.end(),
 		histHandle.begin(), [](auto& hist){return hist.hanlde();});
 
@@ -95,7 +95,7 @@ void MyProcessor::init() {
 
 void MyProcessor::processEvent(EventStore* event)
 
-	std::vector<HandleH2F> histHandles;
+	std::vector<H2FHandle> histHandles;
 	std::transform(_hist2fs.begin(), _hist2fs.end(),
 		std::bak_inserter(histHandle), [](auto& hist){return hist.hanlde();});
 
@@ -116,7 +116,7 @@ For listing of Histogram types see [MarlinBookConfig.h](/doxygen/MarlinBookConfi
 
 ```cpp
 // dim… dimenision of data points(1, 2, and 3 are supported)
-// w_t… type of weight, float = F, double = D, int = I
+// w_t… type of weight, F… float, D… double, I… interger
 Hist/*dim*//*w_t*/ hist = book/*dim*//*w_t*/(
 	Processor* proc, 
 	const std::filesystem::path& path,
