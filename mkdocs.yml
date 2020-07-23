@@ -1,4 +1,5 @@
 site_name: MarlinMT
+site_url: 'https://ilcsoft.github.io/MarlinMT/'
 nav:
     - Home: 'index.md'
     - About:
